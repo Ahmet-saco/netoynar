@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "source": "netoynar-functions",
+    "codebase": "netoynar-functions",
+    "runtime": "nodejs20"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}
