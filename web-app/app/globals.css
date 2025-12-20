@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  /* Ana Renk Paleti - Koyu Köknar Temelli */
+  --background: #051A18;       /* Derin Köknar Yeşili */
+  --foreground: #E0E7E6;       /* Yumuşak Beyaz (Göz yormayan) */
+  
+  /* Aksan Renkler - Neon Futbol Dinamiği */
+  --accent-neon: #C1FF00;      /* Neon Lime (Ana aksiyon rengi) */
+  --accent-cyan: #00F5FF;      /* Elektrik Turkuaz (Canlı skorlar/İstatistikler) */
+  
+  /* Yüzey ve Katmanlar */
+  --surface: #0A2E2A;          /* Kart ve Header arka planı */
+  --glass-border: rgba(193, 255, 0, 0.15); /* Neon yeşili hafif kenarlık */
+  --glass-bg: rgba(10, 46, 42, 0.6);       /* Transparan köknar */
+}
+
+/* Tailwind token'ları yerine doğrudan CSS değişkenlerini kullanıyoruz. */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+  /* Sahadaki çim dokusu hissi için çok hafif bir gradient ekledik */
+  background-image: radial-gradient(circle at top right, #082623, #051A18);
+}
+
+/* Arka Plan Glow Efektleri (Neon Saha Işıkları) */
+.glow-mesh {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(193, 255, 0, 0.08) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Premium Futbol Cam Efekti */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Neon Glow Text (Örn: Canlı skorlar için) */
+.text-neon-glow {
+  text-shadow: 0 0 10px rgba(193, 255, 0, 0.5);
+}
+
+/* Custom Scrollbar - Temaya Uygun */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: #14534D; /* Köknar vurgu tonu */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-neon);
+}
