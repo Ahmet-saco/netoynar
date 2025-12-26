@@ -57,8 +57,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // Next.js otomatik olarak app/icon.jpg ve app/apple-icon.jpg dosyalarını kullanır
-  // Manuel icon tanımına gerek yok
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/logo.jpg',
+    apple: '/logo.jpg',
+  },
 };
 
 export default function RootLayout({
