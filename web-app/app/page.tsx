@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -141,6 +142,9 @@ export default function Home() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Social Media Footer */}
+      <SocialMediaFooter />
     </div>
   );
 }
@@ -862,6 +866,7 @@ interface ApplyFormData {
   position: string;
   dominantFoot: string;
   team: string;
+  league: string;
   city: string;
   instagram: string;
   phone: string;
@@ -871,6 +876,7 @@ interface ApplyFormData {
 
 const POSITIONS = ['Kaleci', 'Defans', 'Orta Saha', 'Forvet', 'Kanat'];
 const DOMINANT_FEET = ['Sağ', 'Sol', 'Her İkisi'];
+const LEAGUES = ['2. Amatör', '1. Amatör', 'Süper Amatör', 'Bölgesel Amatör'];
 
 function ApplyForm({
   onSuccess,
@@ -885,6 +891,7 @@ function ApplyForm({
     position: '',
     dominantFoot: '',
     team: '',
+    league: '',
     city: '',
     instagram: '',
     phone: '',
@@ -901,6 +908,7 @@ function ApplyForm({
   const [timeRemaining, setTimeRemaining] = useState<number>(0); // seconds
   const [isUploading, setIsUploading] = useState(false);
   const [videoStoragePath, setVideoStoragePath] = useState<string | null>(null);
+  const [modalType, setModalType] = useState<'privacy' | 'kvkk' | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadStartTime = useRef<number>(0);
   const lastProgressTime = useRef<number>(0);
@@ -1094,6 +1102,7 @@ function ApplyForm({
       if (!formData.team.trim()) return setError('Takım bilgisi gerekli');
       if (!formData.position) return setError('Mevki seçiniz');
       if (!formData.dominantFoot) return setError('Baskın ayak seçiniz');
+      if (!formData.league) return setError('Lig seçiniz');
       return true;
     }
 
@@ -1165,6 +1174,7 @@ function ApplyForm({
         position: formData.position,
         dominantFoot: formData.dominantFoot,
         team: formData.team.trim(),
+        league: formData.league,
         city: formData.city.trim(),
         instagram: formData.instagram.trim(),
         phone: formData.phone.trim() || null,
@@ -1341,7 +1351,7 @@ function ApplyForm({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormSelect label="Baskın Ayak" name="dominantFoot" value={formData.dominantFoot} onChange={handleInputChange} options={DOMINANT_FEET} />
-              <div className="hidden md:block" />
+              <FormSelect label="Lig" name="league" value={formData.league} onChange={handleInputChange} options={LEAGUES} />
             </div>
               </div>
             )}
@@ -1380,17 +1390,42 @@ function ApplyForm({
               <div className="hidden md:block" />
             </div>
 
-            <div className="flex items-center gap-3 bg-white/5 p-4 rounded-xl">
+            <div className="flex items-start gap-3 bg-white/5 p-4 rounded-xl">
               <input
                 type="checkbox"
+                id="consent-checkbox"
                 checked={formData.consent}
                 onChange={(e) =>
                   setFormData({ ...formData, consent: e.target.checked })
                 }
-                className="w-5 h-5 accent-[#C1FF00]"
+                className="w-5 h-5 accent-[#C1FF00] mt-0.5 flex-shrink-0"
               />
-              <label className="text-[10px] text-white/55 font-bold leading-tight uppercase">
-                Videomun ve bilgilerimin Net Oynar vitrininde paylaşılmasına izin veriyorum.
+              <label 
+                htmlFor="consent-checkbox"
+                className="text-[10px] text-white/55 font-bold leading-tight uppercase cursor-pointer"
+              >
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalType('privacy');
+                  }}
+                  className="text-[#C1FF00] hover:text-[#C1FF00]/80 underline transition-colors"
+                >
+                  Gizlilik Politikası
+                </button>
+                {' ve '}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalType('kvkk');
+                  }}
+                  className="text-[#C1FF00] hover:text-[#C1FF00]/80 underline transition-colors"
+                >
+                  KVKK
+                </button>
+                {' bilgilendirme metinlerini okudum, onay veriyorum.'}
               </label>
             </div>
 
@@ -1468,7 +1503,321 @@ function ApplyForm({
           )}
         </div>
       </form>
+
+      {/* Privacy/KVKK Modal */}
+      {modalType && (
+        <PolicyModal
+          type={modalType}
+          onClose={() => setModalType(null)}
+        />
+      )}
     </div>
+  );
+}
+
+// --- POLICY MODAL ---
+function PolicyModal({ type, onClose }: { type: 'privacy' | 'kvkk'; onClose: () => void }) {
+  const isPrivacy = type === 'privacy';
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        />
+
+        {/* Modal Content */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          onClick={(e) => e.stopPropagation()}
+          className="relative w-full max-w-4xl max-h-[90vh] bg-[#051A18] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#0A2E2A]/50">
+            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-widest text-[#C1FF00]">
+              {isPrivacy ? 'Gizlilik Politikası' : 'KVKK Aydınlatma Metni'}
+            </h2>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 transition-colors text-white/70 hover:text-white"
+              aria-label="Kapat"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-6 sm:p-8 md:p-12 space-y-8">
+              {isPrivacy ? <PrivacyContent /> : <KVKKContent />}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function PrivacyContent() {
+  return (
+    <>
+      <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        Bu Gizlilik Politikası, Net Oynar platformunu ziyaret eden ve kullanan kullanıcıların kişisel verilerinin hangi kapsamda toplandığını, işlendiğini, kullanıldığını ve korunduğunu açıklamak amacıyla hazırlanmıştır.
+      </p>
+
+      <div className="space-y-6">
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            1. Veri Sorumlusu
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            Net Oynar, kullanıcıların kişisel verilerinin işlenmesi bakımından veri sorumlusu sıfatına sahiptir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            2. Toplanan Kişisel Veriler
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Net Oynar platformu üzerinden aşağıdaki kişisel veriler toplanabilmektedir:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Ad ve soyad</li>
+            <li>Yaş bilgisi</li>
+            <li>Instagram kullanıcı adı</li>
+            <li>Telefon numarası (isteğe bağlı)</li>
+            <li>30–60 saniye aralığında yüklenen maç / performans videoları</li>
+            <li>Futbol bilgileri (oynadığı takım, pozisyon, baskın ayak vb.)</li>
+            <li>IP adresi, cihaz ve kullanım bilgileri</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            3. Kişisel Verilerin Toplanma Yöntemi
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Kişisel verileriniz;
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Kullanıcı kayıt formları,</li>
+            <li>Video yükleme alanları,</li>
+            <li>Profil oluşturma bölümleri,</li>
+            <li>Platform kullanımı sırasında sağlanan bilgiler</li>
+          </ul>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mt-3">
+            aracılığıyla elektronik ortamda toplanmaktadır.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            4. Kişisel Verilerin İşlenme Amaçları
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Toplanan kişisel veriler aşağıdaki amaçlarla işlenmektedir:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Kullanıcı profillerinin oluşturulması ve yönetilmesi</li>
+            <li>Futbolcu performans videolarının platformda paylaşılması</li>
+            <li>Scout ve değerlendirme ekiplerinin oyuncu analizlerini yapabilmesi</li>
+            <li>Video içeriklerinde seslendirme ve tanıtım metinlerinin hazırlanması</li>
+            <li>Kullanıcı ile geri iletişim kurulabilmesi (Instagram veya telefon aracılığıyla)</li>
+            <li>Platform güvenliğinin sağlanması ve hizmet kalitesinin artırılması</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            5. Kişisel Verilerin Aktarılması
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Kişisel verileriniz;
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Scout ve değerlendirme süreçlerinde görev alan yetkili kişilerle,</li>
+            <li>Teknik altyapı, barındırma ve video hizmeti sağlayıcılarıyla,</li>
+            <li>Yasal yükümlülükler kapsamında yetkili kamu kurum ve kuruluşlarıyla</li>
+          </ul>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mt-3">
+            hukuka uygun şekilde ve gerekli güvenlik önlemleri alınarak paylaşılabilir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            6. Kişisel Verilerin Saklanma Süresi
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            Kişisel veriler, işlenme amaçlarının gerektirdiği süre boyunca saklanmakta; ilgili mevzuatta öngörülen sürelerin sona ermesi veya işleme amacının ortadan kalkması hâlinde silinmekte, yok edilmekte veya anonim hale getirilmektedir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            7. Veri Güvenliği
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            Net Oynar, kişisel verilerin gizliliğini ve güvenliğini sağlamak amacıyla gerekli teknik ve idari tedbirleri almaktadır. Yetkisiz erişim, veri kaybı ve hukuka aykırı kullanım risklerine karşı güvenlik önlemleri uygulanmaktadır.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            8. Çerezler (Cookies)
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            Web sitemizde kullanıcı deneyimini geliştirmek ve hizmetlerin daha verimli sunulabilmesi amacıyla çerezler kullanılmaktadır. Kullanıcılar, çerez tercihlerini tarayıcı ayarları üzerinden yönetebilir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            9. Politika Güncellemeleri
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            Bu Gizlilik Politikası, gerekli görüldüğü durumlarda güncellenebilir. Güncel metin, web sitesinde yayımlandığı tarihten itibaren geçerli kabul edilir.
+          </p>
+        </section>
+      </div>
+    </>
+  );
+}
+
+function KVKKContent() {
+  return (
+    <>
+      <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        Bu Aydınlatma Metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, Net Oynar tarafından kişisel verilerin işlenmesine ilişkin olarak kullanıcıları bilgilendirmek amacıyla hazırlanmıştır.
+      </p>
+
+      <div className="space-y-6">
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            1. Veri Sorumlusu
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            KVKK kapsamında kişisel verileriniz, veri sorumlusu sıfatıyla Net Oynar tarafından işlenmektedir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            2. İşlenen Kişisel Veriler
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Platform kapsamında aşağıdaki kişisel veriler işlenebilmektedir:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Kimlik bilgileri (ad, soyad, yaş)</li>
+            <li>İletişim bilgileri (Instagram kullanıcı adı, telefon numarası – isteğe bağlı)</li>
+            <li>Görsel ve işitsel veriler (30–60 saniye aralığında yüklenen maç videoları)</li>
+            <li>Sporcu bilgileri (takım, pozisyon, baskın ayak vb.)</li>
+            <li>İşlem güvenliği ve kullanım bilgileri</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            3. Kişisel Verilerin İşlenme Amaçları
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Kullanıcı profili oluşturulması ve yönetilmesi</li>
+            <li>Futbolcu performans videolarının paylaşılması ve değerlendirilmesi</li>
+            <li>Scout ve değerlendirme ekiplerinin analiz süreçlerinin yürütülmesi</li>
+            <li>Video içeriklerinde seslendirme ve tanıtım amaçlı bilgi kullanımı</li>
+            <li>Kullanıcı ile geri iletişim kurulması</li>
+            <li>Platformun güvenli ve etkin şekilde işletilmesi</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            4. Kişisel Verilerin Aktarılması
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Kişisel verileriniz;
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Değerlendirme ve scout süreçlerinde görev alan yetkili kişi ve ekiplerle,</li>
+            <li>Teknik hizmet sağlayıcılarla,</li>
+            <li>Mevzuat gereği yetkili kamu kurum ve kuruluşlarıyla</li>
+          </ul>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mt-3">
+            KVKK'nın 8. ve 9. maddelerine uygun olarak paylaşılabilir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            5. Kişisel Verilerin Toplanma Yöntemi ve Hukuki Sebebi
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Kişisel verileriniz, web sitesi ve platform üzerinden elektronik ortamda otomatik veya kısmen otomatik yöntemlerle toplanmaktadır.
+          </p>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            Veriler;
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması,</li>
+            <li>Veri sorumlusunun meşru menfaatleri,</li>
+            <li>Açık rızanın bulunması hâllerine dayanılarak</li>
+          </ul>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mt-3">
+            KVKK'nın 5. maddesi kapsamında işlenmektedir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            6. KVKK Kapsamındaki Haklarınız
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+            KVKK'nın 11. maddesi uyarınca kullanıcılar;
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-white/60 text-sm sm:text-base leading-relaxed ml-4">
+            <li>Kişisel verilerinin işlenip işlenmediğini öğrenme</li>
+            <li>İşlenmişse buna ilişkin bilgi talep etme</li>
+            <li>İşlenme amacını ve amaca uygun kullanılıp kullanılmadığını öğrenme</li>
+            <li>Aktarıldığı üçüncü kişileri bilme</li>
+            <li>Eksik veya yanlış işlenen verilerin düzeltilmesini isteme</li>
+            <li>Kişisel verilerin silinmesini veya yok edilmesini talep etme</li>
+            <li>Hukuka aykırı işleme nedeniyle zararın giderilmesini talep etme</li>
+          </ul>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed mt-3">
+            haklarına sahiptir.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-[#C1FF00] font-black text-base sm:text-lg uppercase tracking-wider mb-4">
+            7. Başvuru Yolu
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+            KVKK kapsamındaki taleplerinizi yazılı veya elektronik yollarla Net Oynar'a iletebilirsiniz. Başvurular, ilgili mevzuat çerçevesinde değerlendirilerek yasal süreler içerisinde sonuçlandırılır.
+          </p>
+        </section>
+      </div>
+    </>
   );
 }
 
@@ -1698,5 +2047,116 @@ function SuccessView({ onReset }: { onReset: () => void }) {
       </button>
       </motion.div>
     </div>
+  );
+}
+
+// --- SOCIAL MEDIA FOOTER ---
+function SocialMediaFooter() {
+  const socialLinks = {
+    instagram: 'https://www.instagram.com/netoynar?igsh=MWU4ems3NHFua2hhcA==',
+    youtube: 'https://youtube.com/@netoynar?si=rBPIHhLOwogZh4I-',
+    tiktok: 'https://www.tiktok.com/@netoynar?_r=1&_t=ZS-92XqWg4BsAb',
+  };
+
+  return (
+    <footer className="relative z-10 border-t border-white/5 mt-20">
+      <div className="container mx-auto px-4 sm:px-6 py-8">
+        <div className="flex items-center justify-center gap-6">
+          {/* Instagram */}
+          <motion.a
+            href={socialLinks.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group"
+            aria-label="Instagram"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] shadow-lg hover:shadow-xl transition-all duration-300">
+              <InstagramIcon className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
+            </div>
+          </motion.a>
+
+          {/* YouTube */}
+          <motion.a
+            href={socialLinks.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group"
+            aria-label="YouTube"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#FF0000] shadow-lg hover:shadow-xl transition-all duration-300">
+              <YouTubeIcon className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
+            </div>
+          </motion.a>
+
+          {/* TikTok */}
+          <motion.a
+            href={socialLinks.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group"
+            aria-label="TikTok"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#000000] shadow-lg hover:shadow-xl transition-all duration-300">
+              <TikTokIcon className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
+            </div>
+          </motion.a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// --- SOCIAL MEDIA ICONS (Custom SVG) ---
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function YouTubeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }

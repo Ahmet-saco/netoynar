@@ -28,7 +28,8 @@ if (!fs.existsSync(credentialsPath)) {
 const credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
 
 const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
-const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0] || 'http://localhost:8080');
+// localhost redirect URI kullan (Console'da tanımlı olan)
+const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, 'http://localhost:8080');
 
 // OAuth URL oluştur
 const authUrl = oAuth2Client.generateAuthUrl({
@@ -39,18 +40,37 @@ const authUrl = oAuth2Client.generateAuthUrl({
   ],
 });
 
+console.log('\n═══════════════════════════════════════════════════════════');
 console.log('Google Drive erişimi için izin verin:');
+console.log('═══════════════════════════════════════════════════════════\n');
 console.log(authUrl);
-console.log('\nYukarıdaki URL\'yi tarayıcıda açın ve izin verin.');
-console.log('Sonra size verilen kodu buraya yapıştırın.\n');
+console.log('\n═══════════════════════════════════════════════════════════');
+console.log('ADIMLAR:');
+console.log('1. Yukarıdaki URL\'yi tarayıcıda açın');
+console.log('2. Google hesabınızla giriş yapın');
+console.log('3. İzin verin');
+console.log('4. Sayfa "localhost bağlanamadı" hatası verecek - NORMAL!');
+console.log('5. Tarayıcı adres çubuğuna bakın, URL\'de "code=" ile başlayan');
+console.log('   bir kod göreceksiniz (örnek: code=4/0A...).');
+console.log('6. Bu kodu kopyalayıp aşağıya yapıştırın');
+console.log('═══════════════════════════════════════════════════════════\n');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-rl.question('Authorization Code: ', async (code) => {
+rl.question('Authorization Code (veya tam URL): ', async (input) => {
   rl.close();
+
+  // Eğer URL verilmişse, code'u çıkar
+  let code = input.trim();
+  if (code.includes('code=')) {
+    // URL'den code'u çıkar
+    const urlParams = new URLSearchParams(code.split('?')[1] || code);
+    code = urlParams.get('code') || code;
+    console.log('\n✅ Authorization code URL\'den çıkarıldı:', code.substring(0, 20) + '...');
+  }
 
   try {
     const { tokens } = await oAuth2Client.getToken(code);
