@@ -108,7 +108,7 @@ export default function Home() {
             exit={{ opacity: 0, x: direction * -50 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={`grid ${active === 'faq' || active === 'apply' ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-16 items-center min-h-[75vh]`}>
+            <div className={`grid ${active === 'faq' || active === 'apply' || active === 'success' ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-16 items-center min-h-[75vh]`}>
               {/* Sol İçerik */}
               <div className="order-2 lg:order-1 space-y-8">
                 {active === 'hero' && <HeroView onNext={() => handleChangeScene('apply')} />}
@@ -132,8 +132,8 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Desktop: tüm sahneler için sağ kolon (FAQ ve Apply hariç) */}
-              {active !== 'faq' && active !== 'apply' && (
+              {/* Desktop: tüm sahneler için sağ kolon (FAQ, Apply ve Success hariç) */}
+              {active !== 'faq' && active !== 'apply' && active !== 'success' && (
               <div className="order-1 lg:order-2 relative hidden lg:flex justify-center items-center h-full min-h-[420px]">
                 <RightDynamicVisual active={active} applyStep={applyStep} />
               </div>
@@ -169,13 +169,12 @@ function RightDynamicVisual({ active, applyStep }: { active: SceneId; applyStep?
           {active === 'hero' && <HeroVisual />}
 
           {/* Diğer sahneler: tek bir premium 3D frame içinde */}
-          {active !== 'hero' && (
+          {active !== 'hero' && active !== 'success' && (
             <RightFrame>
               {active === 'process' && <ProcessVisual />}
               {active === 'guide' && <GuideVisual />}
               {active === 'faq' && <FAQVisual />}
               {active === 'apply' && <ApplyIntakeVisual step={applyStep ?? 1} />}
-              {active === 'success' && <SuccessTrophyVisual />}
             </RightFrame>
           )}
         </motion.div>
@@ -1999,6 +1998,12 @@ function FAQView() {
 }
 
 function SuccessView({ onReset }: { onReset: () => void }) {
+  const socialLinks = {
+    instagram: 'https://www.instagram.com/netoynar?igsh=MWU4ems3NHFua2hhcA==',
+    youtube: 'https://youtube.com/@netoynar?si=rBPIHhLOwogZh4I-',
+    tiktok: 'https://www.tiktok.com/@netoynar?_r=1&_t=ZS-92XqWg4BsAb',
+  };
+
   return (
     <div className="text-center space-y-10 py-10">
       <motion.div
@@ -2034,10 +2039,69 @@ function SuccessView({ onReset }: { onReset: () => void }) {
         </div>
       </motion.div>
 
+      {/* Sosyal Medya Bölümü */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="space-y-6"
+      >
+        <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-medium leading-relaxed">
+          Başvurunuzun değerlendirilmesi için sosyal medya hesaplarımızı takip etmeniz gerekir.
+        </p>
+        
+        <div className="flex items-center justify-center gap-6 pt-4">
+          {/* Instagram */}
+          <motion.a
+            href={socialLinks.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group"
+            aria-label="Instagram"
+          >
+            <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] shadow-lg hover:shadow-xl transition-all duration-300">
+              <InstagramIcon className="w-7 h-7 md:w-8 md:h-8 group-hover:scale-110 transition-transform duration-300" />
+            </div>
+          </motion.a>
+
+          {/* YouTube */}
+          <motion.a
+            href={socialLinks.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group"
+            aria-label="YouTube"
+          >
+            <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl bg-[#FF0000] shadow-lg hover:shadow-xl transition-all duration-300">
+              <YouTubeIcon className="w-7 h-7 md:w-8 md:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+            </div>
+          </motion.a>
+
+          {/* TikTok */}
+          <motion.a
+            href={socialLinks.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group"
+            aria-label="TikTok"
+          >
+            <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl bg-[#000000] shadow-lg hover:shadow-xl transition-all duration-300">
+              <TikTokIcon className="w-7 h-7 md:w-8 md:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+            </div>
+          </motion.a>
+        </div>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
       >
         <button 
           onClick={onReset} 
