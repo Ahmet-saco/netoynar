@@ -1,0 +1,12 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /submissions/{allPaths=**} {
+      // Video yükleme izni (MB limiti kaldırıldı, sadece süre kontrolü var: 30-60 saniye)
+      allow write: if true;
+      // Videolar public değil (okuma izni yok)
+      allow read: if false;
+    }
+  }
+}
+

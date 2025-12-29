@@ -243,11 +243,7 @@ function ApplyIntakeVisual({ step }: { step: 1 | 2 | 3 }) {
               <div className="text-sm font-medium leading-relaxed text-white/50">
                 En iyi aksiyonların. Efektsiz, net görüntü. İnceleme tamamen manuel.
               </div>
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.22em] text-white/40">
-                <div className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#C1FF00]/80" />
-                  50MB limit
-                </div>
+              <div className="flex items-center justify-center text-[10px] font-black uppercase tracking-[0.22em] text-white/40">
                 <div className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
                   Güvenli yükleme
@@ -1012,13 +1008,6 @@ function ApplyForm({
     setVideoStoragePath(null);
     setUploadSpeed(0);
     setTimeRemaining(0);
-    
-    // File size validation
-    if (file.size > 70 * 1024 * 1024) {
-      setError('Video 70MB\'dan küçük olmalı');
-      e.target.value = ''; // Reset input
-      return;
-    }
     
     // Video duration validation (30-60 seconds)
     const video = document.createElement('video');
