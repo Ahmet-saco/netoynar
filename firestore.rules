@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /submissions/{submissionId} {
+      // Herkes başvuru oluşturabilir (başvuru formu)
+      allow create: if true;
+
+      // Okuma: herkes okuyabilir (admin paneli + vitrin için)
+      allow read: if true;
+
+      // Güncelleme: status, reviewedAt güncellenebilir (admin onay/red)
+      allow update: if true;
+
+      // Silme: yasak
+      allow delete: if false;
+    }
+  }
+}

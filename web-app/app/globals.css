@@ -22,8 +22,6 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
-  /* Sahadaki çim dokusu hissi için çok hafif bir gradient ekledik */
-  background-image: radial-gradient(circle at top right, #082623, #051A18);
 }
 
 /* Arka Plan Glow Efektleri (Neon Saha Işıkları) */
@@ -63,4 +61,40 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-neon);
+}
+
+/* --- Browser Autofill Overrides --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0A2E2A inset !important;
+  -webkit-text-fill-color: #C1FF00 !important;
+  caret-color: #C1FF00 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* --- Date Input & Calendar Picker Styling --- */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(85%) sepia(85%) saturate(1500%) hue-rotate(30deg) brightness(105%) contrast(105%);
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background-position: center;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  transform: scale(1.2);
+  background-color: rgba(193, 255, 0, 0.1);
+}
+
+/* Remove default browser clear/spin buttons for a cleaner look */
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+
+::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
 }

@@ -279,7 +279,7 @@ exports.transferVideoToDrive = onDocumentCreated(
         driveFolderLink: folderLink,
         driveFolderId: submissionFolder.id,
         driveInfoFileId: infoFile.id,
-        status: 'uploaded',
+        status: 'uploaded',  // 'approved' veya 'rejected' için admin paneli bekliyor
         driveFileId: driveFile.id,
         transferredAt: admin.firestore.FieldValue.serverTimestamp(),
       };
@@ -293,18 +293,10 @@ exports.transferVideoToDrive = onDocumentCreated(
         .doc(submissionId)
         .update(updateData);
 
-      console.log('Video transferred to Drive successfully. driveVideoLink:', driveLink);
+      console.log('Video Drive\'a aktarıldı ve Firestore\'da tutuldu. Admin panelinden incelenebilir. driveVideoLink:', driveLink);
 
-      // 6. Firebase Storage'dan video'yu sil (Drive'a aktarıldığı için artık gerekli değil)
-      console.log('Step 6: Deleting video from Storage...');
-      await videoStorageFile.delete();
-      console.log('Video deleted from Storage');
-
-      // 7. Firestore'dan başvuruyu sil (Drive'a aktarıldığı için artık gerekli değil)
-      // Veriler Google Drive'da güvende, Firestore'da tutmaya gerek yok
-      console.log('Step 7: Deleting submission from Firestore...');
-      await db.collection('submissions').doc(submissionId).delete();
-      console.log('Submission deleted from Firestore - Data is safe in Google Drive');
+      // NOT: Firestore\'dan silmiyoruz - admin panelinden onay/ret için kayıtta kalmalı
+      // NOT: Storage\'dan silmiyoruz - admin video link\'i üzerinden erişilebilir
 
       return { success: true, driveLink };
     } catch (error) {
@@ -433,18 +425,44 @@ async function saveSubmissionInfo(submissionData, folderId) {
   
   const driveService = google.drive({ version: 'v3', auth: oAuth2Client });
   
-  // Başvuru bilgilerini JSON formatında hazırla
-  const infoData = {
-    fullName: submissionData.fullName,
-    age: submissionData.age,
-    position: submissionData.position,
-    dominantFoot: submissionData.dominantFoot,
-    team: submissionData.team,
-    city: submissionData.city,
-    instagram: submissionData.instagram,
-    phone: submissionData.phone || null, // Telefon numarası (opsiyonel)
-    submittedAt: new Date().toISOString(),
-  };
+  // Başvuru bilgilerini JSON formatında hazırla (Sadece kullanıcı verilerini al)
+  const infoData = {};
+  
+  // Drive'a gitmesini istemediğimiz teknik/admin alanları
+  const excludedFields = [
+    'status', 
+    'videoStoragePath', 
+    'driveVideoLink', 
+    'driveFolderLink', 
+    'driveFolderId', 
+    'driveInfoFileId', 
+    'driveFileId', 
+    'transferredAt',
+    'processingStartedAt',
+    'errorMessage',
+    'errorStack',
+    'errorOccurredAt',
+    'retryAttemptedAt',
+    'previousStatus',
+    'transferredToDriveAt'
+  ];
+  
+  // Firestore'daki alanları döngü ile JSON'a aktar (Sadece kullanıcı verileri)
+  for (const [key, value] of Object.entries(submissionData)) {
+    if (excludedFields.includes(key)) continue;
+
+    // Timestamp nesnelerini stringe çevir
+    if (value && typeof value.toDate === 'function') {
+      infoData[key] = value.toDate().toISOString();
+    } else {
+      infoData[key] = value;
+    }
+  }
+
+  // submittedAt adında bir alan yoksa createdAt'i oraya kopyala
+  if (!infoData.submittedAt && infoData.createdAt) {
+    infoData.submittedAt = infoData.createdAt;
+  }
   
   const infoJson = JSON.stringify(infoData, null, 2);
   const infoBuffer = Buffer.from(infoJson, 'utf8');
