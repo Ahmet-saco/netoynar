@@ -27,9 +27,9 @@ export default function Home() {
   const touchEndX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchEndY = useRef<number | null>(null);
-  
+
   const [totalSubmissions, setTotalSubmissions] = useState(0);
-  
+
   useEffect(() => {
     // 1. URL'deki scene parametresine göre başlangıç sayfasını ayarla
     if (typeof window !== 'undefined') {
@@ -80,10 +80,10 @@ export default function Home() {
     // Disable swipe on apply and success pages
     if (active === 'apply' || active === 'success') return;
     if (!touchStartX.current || !touchEndX.current || !touchStartY.current || !touchEndY.current) return;
-    
+
     const distanceX = touchStartX.current - touchEndX.current;
     const distanceY = touchStartY.current - touchEndY.current;
-    
+
     // Y eksenindeki hareket X ekseninden büyükse, bu muhtemelen yukarı/aşağı bir scroll'dur. Yoksay.
     if (Math.abs(distanceY) > Math.abs(distanceX)) return;
 
@@ -94,7 +94,7 @@ export default function Home() {
       // Only navigate between navigation pages
       const currentIndex = NAVIGATION_SCENES.indexOf(active);
       if (currentIndex === -1) return; // Current page is not a navigation page
-      
+
       let nextIndex: number;
 
       if (isLeftSwipe) {
@@ -112,7 +112,7 @@ export default function Home() {
   };
 
   return (
-    <div 
+    <div
       className={`relative min-h-screen bg-[#051A18] text-[#E0E7E6] selection:bg-[#C1FF00]/30 overflow-x-hidden font-sans ${active === 'hero' ? 'lg:h-screen lg:overflow-hidden' : ''}`}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
@@ -121,8 +121,8 @@ export default function Home() {
       {/* Dinamik Arka Plan Katmanları */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Saha Çizgileri Dekoru */}
-        <div className="absolute inset-0 opacity-[0.03] grayscale pointer-events-none" 
-             style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/carbon-fibre.png')` }} />
+        <div className="absolute inset-0 opacity-[0.03] grayscale pointer-events-none"
+          style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/carbon-fibre.png')` }} />
       </div>
 
       <style jsx global>{`
@@ -131,7 +131,7 @@ export default function Home() {
       `}</style>
 
       <main className="relative z-10 container mx-auto px-4 sm:px-6 pt-4 pb-12 lg:pb-0 max-w-full overflow-x-hidden h-full">
-      <Header active={active} onChangeScene={handleChangeScene} />
+        <Header active={active} onChangeScene={handleChangeScene} />
         <AnimatePresence mode="wait" custom={direction} initial={false}>
           <motion.div
             key={active}
@@ -169,9 +169,9 @@ export default function Home() {
 
               {/* Desktop: tüm sahneler için sağ kolon (FAQ, Apply ve Success hariç) */}
               {active !== 'faq' && active !== 'apply' && active !== 'success' && (
-              <div className="order-1 lg:order-2 relative hidden lg:flex justify-center items-center h-full min-h-[420px] will-change-transform">
-                <RightDynamicVisual active={active} applyStep={applyStep} totalSubmissions={totalSubmissions} />
-              </div>
+                <div className="order-1 lg:order-2 relative hidden lg:flex justify-center items-center h-full min-h-[420px] will-change-transform">
+                  <RightDynamicVisual active={active} applyStep={applyStep} totalSubmissions={totalSubmissions} />
+                </div>
               )}
             </div>
           </motion.div>
@@ -360,26 +360,26 @@ function RightFrame({ children }: { children: React.ReactNode }) {
 function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
   return (
     <div className="relative w-full h-full flex items-center justify-center will-change-contents transform-gpu">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1, rotate: 360 }}
-        transition={{ 
+        transition={{
           opacity: { duration: 1 },
           scale: { duration: 1 },
           rotate: { duration: 20, repeat: Infinity, ease: "linear" }
         }}
-        className="absolute w-full h-full border border-white/5 rounded-full will-change-transform" 
+        className="absolute w-full h-full border border-white/5 rounded-full will-change-transform"
         style={{ transform: 'translateZ(0)' }}
       />
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1, rotate: -360 }}
-        transition={{ 
+        transition={{
           opacity: { duration: 1.2 },
           scale: { duration: 1.2 },
           rotate: { duration: 15, repeat: Infinity, ease: "linear" }
         }}
-        className="absolute w-[70%] h-[70%] border border-[#C1FF00]/20 rounded-full border-dashed will-change-transform" 
+        className="absolute w-[70%] h-[70%] border border-[#C1FF00]/20 rounded-full border-dashed will-change-transform"
         style={{ transform: 'translateZ(0)' }}
       />
 
@@ -393,7 +393,7 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
           className="absolute inset-0 will-change-transform"
           initial={{ rotate: 0, opacity: 0, scale: 0.95 }}
           animate={{ rotate: 360, opacity: 1, scale: 1 }}
-          transition={{ 
+          transition={{
             rotate: { duration: 40, repeat: Infinity, ease: 'linear' },
             opacity: { duration: 0.6 },
             scale: { duration: 0.6 }
@@ -401,19 +401,19 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
           style={{ transformOrigin: '50% 50%', transform: 'translateZ(0)' }}
         >
           {/* KEŞİF */}
-          <div 
+          <div
             className="absolute left-1/2 top-[12%] z-20"
             style={{ transform: 'translate(-50%, -50%)' }}
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: 1, 
+              animate={{
+                scale: 1,
                 opacity: 1,
                 y: [0, -4, 0],
                 rotate: -360
               }}
-              transition={{ 
+              transition={{
                 y: { duration: 5.2, repeat: Infinity, ease: 'easeInOut' },
                 rotate: { duration: 40, repeat: Infinity, ease: "linear" },
                 opacity: { duration: 0.5 },
@@ -423,28 +423,28 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
             >
               <div className="h-10 w-10 rounded-full bg-black/20 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(193,255,0,0.10)] flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#C1FF00]">
-                  <path d="M12 22s8-3.5 8-10V6l-8-3-8 3v6c0 6.5 8 10 8 10Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-                  <path d="M12 8v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                  <path d="M12 16h.01" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+                  <path d="M12 22s8-3.5 8-10V6l-8-3-8 3v6c0 6.5 8 10 8 10Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                  <path d="M12 8v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M12 16h.01" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                 </svg>
               </div>
             </motion.div>
           </div>
 
           {/* İNCELEME */}
-          <div 
+          <div
             className="absolute left-[12%] top-1/2 z-20"
             style={{ transform: 'translate(-50%, -50%)' }}
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: 1, 
+              animate={{
+                scale: 1,
                 opacity: 1,
                 y: [0, 3, 0],
                 rotate: -360
               }}
-              transition={{ 
+              transition={{
                 y: { duration: 6.1, repeat: Infinity, ease: 'easeInOut' },
                 rotate: { duration: 40, repeat: Infinity, ease: "linear" },
                 opacity: { duration: 0.5 },
@@ -454,27 +454,27 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
             >
               <div className="h-10 w-10 rounded-full bg-black/20 backdrop-blur-md border border-white/10 shadow-[0_0_22px_rgba(255,255,255,0.06)] flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-cyan-400">
-                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" strokeWidth="1.8"/>
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" strokeWidth="1.8" />
                 </svg>
               </div>
             </motion.div>
           </div>
 
           {/* ANALİZ */}
-          <div 
+          <div
             className="absolute right-[15.5%] top-[34%] z-20"
             style={{ transform: 'translate(50%, -50%)' }}
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: 1, 
+              animate={{
+                scale: 1,
                 opacity: 1,
                 y: [0, -3, 0],
                 rotate: -360
               }}
-              transition={{ 
+              transition={{
                 y: { duration: 5.6, repeat: Infinity, ease: 'easeInOut' },
                 rotate: { duration: 40, repeat: Infinity, ease: "linear" },
                 opacity: { duration: 0.5 },
@@ -484,29 +484,29 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
             >
               <div className="h-10 w-10 rounded-full bg-black/20 backdrop-blur-md border border-white/10 shadow-[0_0_22px_rgba(0,245,255,0.12)] flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#00F5FF]">
-                  <path d="M4 19V5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                  <path d="M10 19V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                  <path d="M16 19V12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                  <path d="M22 19V7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                  <path d="M4 19V5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M10 19V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M16 19V12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M22 19V7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                 </svg>
               </div>
             </motion.div>
           </div>
 
           {/* VİTRİN */}
-          <div 
+          <div
             className="absolute left-1/2 top-[88%] z-20"
             style={{ transform: 'translate(-50%, -50%)' }}
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: 1, 
+              animate={{
+                scale: 1,
                 opacity: 1,
                 y: [0, 4, 0],
                 rotate: -360
               }}
-              transition={{ 
+              transition={{
                 y: { duration: 6.8, repeat: Infinity, ease: 'easeInOut' },
                 rotate: { duration: 40, repeat: Infinity, ease: "linear" },
                 opacity: { duration: 0.5 },
@@ -516,7 +516,7 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
             >
               <div className="h-10 w-10 rounded-full bg-black/20 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(193,255,0,0.10)] flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#C1FF00]">
-                  <path d="M12 2l2.2 6.7H21l-5.4 3.9L17.8 20 12 15.8 6.2 20l2.2-7.4L3 8.7h6.8L12 2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+                  <path d="M12 2l2.2 6.7H21l-5.4 3.9L17.8 20 12 15.8 6.2 20l2.2-7.4L3 8.7h6.8L12 2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
                 </svg>
               </div>
             </motion.div>
@@ -525,10 +525,10 @@ function HeroVisual({ totalSubmissions }: { totalSubmissions: number }) {
       </div>
 
       <div className="text-center z-10">
-        <motion.h2 
+        <motion.h2
           initial={{ scale: 1, opacity: 0 }}
           animate={{ scale: [1, 1.1, 1], opacity: 1 }}
-          transition={{ 
+          transition={{
             scale: { repeat: Infinity, duration: 4, delay: 0.6 },
             opacity: { duration: 0.4, delay: 0.6 }
           }}
@@ -725,41 +725,41 @@ function TransferSigningVisual() {
       {/* Dijital Sözleşme Kartı */}
       <div className="glass-card w-80 h-[480px] rounded-[2.5rem] border-[#C1FF00]/30 p-1 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C1FF00]/10 to-transparent" />
-        
+
         {/* Oyuncu Silüeti (İmza Atan Figür Temsili) */}
         <div className="h-64 w-full bg-[#0A2E2A] rounded-t-[2rem] relative flex items-end justify-center overflow-hidden">
-          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 0.4 }} 
-                      className="text-[12rem] leading-none grayscale select-none">👤</motion.div>
+          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 0.4 }}
+            className="text-[12rem] leading-none grayscale select-none">👤</motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0A2E2A] to-transparent" />
         </div>
 
         {/* İmza Alanı */}
         <div className="p-6 space-y-4">
-           <div className="space-y-1">
-              <p className="text-[10px] font-black text-[#C1FF00] uppercase tracking-tighter">Official Contract</p>
-              <h4 className="text-xl font-black italic uppercase">Net Oynar Academy</h4>
-           </div>
-           
-           <div className="h-px w-full bg-white/10" />
-           
-           <div className="relative py-4">
-              <p className="text-[10px] text-white/40 mb-1 uppercase font-bold">Player Signature</p>
-              <div className="h-16 w-full border border-dashed border-white/20 rounded-xl flex items-center justify-center relative overflow-hidden">
-                 <motion.div initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }}
-                             transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                             className="text-2xl font-signature text-[#C1FF00] italic opacity-60">
-                    Net Oynar Talent
-                 </motion.div>
-                 {/* İmza Atan Kalem Efekti */}
-                 <motion.div animate={{ x: [-50, 50, -50], y: [-5, 5, -5] }} transition={{ repeat: Infinity, duration: 2 }}
-                             className="absolute text-xl pointer-events-none">✍️</motion.div>
-              </div>
-           </div>
-           
-           <div className="flex justify-between items-center">
-              <div className="text-[10px] font-bold text-white/40 uppercase">Status: <span className="text-[#C1FF00]">Pending</span></div>
-              <div className="w-10 h-10 border border-[#C1FF00]/20 rounded-lg flex items-center justify-center text-xs font-black text-[#C1FF00]">2024</div>
-           </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black text-[#C1FF00] uppercase tracking-tighter">Official Contract</p>
+            <h4 className="text-xl font-black italic uppercase">Net Oynar Academy</h4>
+          </div>
+
+          <div className="h-px w-full bg-white/10" />
+
+          <div className="relative py-4">
+            <p className="text-[10px] text-white/40 mb-1 uppercase font-bold">Player Signature</p>
+            <div className="h-16 w-full border border-dashed border-white/20 rounded-xl flex items-center justify-center relative overflow-hidden">
+              <motion.div initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                className="text-2xl font-signature text-[#C1FF00] italic opacity-60">
+                Net Oynar Talent
+              </motion.div>
+              {/* İmza Atan Kalem Efekti */}
+              <motion.div animate={{ x: [-50, 50, -50], y: [-5, 5, -5] }} transition={{ repeat: Infinity, duration: 2 }}
+                className="absolute text-xl pointer-events-none">✍️</motion.div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div className="text-[10px] font-bold text-white/40 uppercase">Status: <span className="text-[#C1FF00]">Pending</span></div>
+            <div className="w-10 h-10 border border-[#C1FF00]/20 rounded-lg flex items-center justify-center text-xs font-black text-[#C1FF00]">2024</div>
+          </div>
         </div>
       </div>
     </div>
@@ -774,9 +774,9 @@ function SuccessTrophyVisual() {
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
-          initial={{ 
-            x: 0, 
-            y: 0, 
+          initial={{
+            x: 0,
+            y: 0,
             opacity: 1,
             scale: Math.random() * 0.5 + 0.5
           }}
@@ -804,9 +804,9 @@ function SuccessTrophyVisual() {
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ 
-          type: 'spring', 
-          stiffness: 200, 
+        transition={{
+          type: 'spring',
+          stiffness: 200,
           damping: 15,
           delay: 0.3
         }}
@@ -818,15 +818,15 @@ function SuccessTrophyVisual() {
           transition={{ duration: 2, repeat: Infinity }}
           className="absolute inset-0 rounded-full bg-[#C1FF00]/20 blur-2xl"
         />
-        
+
         {/* Main circle */}
         <div className="relative w-32 h-32 rounded-full border-4 border-[#C1FF00] bg-[#C1FF00]/5 flex items-center justify-center">
           {/* Checkmark SVG */}
           <motion.svg
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ 
-              duration: 0.8, 
+            transition={{
+              duration: 0.8,
               delay: 0.6,
               ease: [0.16, 1, 0.3, 1]
             }}
@@ -882,9 +882,8 @@ function Header({ active, onChangeScene }: { active: SceneId; onChangeScene: (s:
           <div className="flex items-center gap-6">
             <button
               onClick={() => onChangeScene('hero')}
-              className={`text-sm font-bold uppercase tracking-widest transition-all hover:text-[#C1FF00] ${
-                active === 'hero' ? 'text-[#C1FF00]' : 'text-white/55'
-              }`}
+              className={`text-sm font-bold uppercase tracking-widest transition-all hover:text-[#C1FF00] ${active === 'hero' ? 'text-[#C1FF00]' : 'text-white/55'
+                }`}
             >
               Net Oynar <span className="font-normal text-white/40">· Başvuru</span>
             </button>
@@ -903,9 +902,8 @@ function Header({ active, onChangeScene }: { active: SceneId; onChangeScene: (s:
               <button
                 key={item.id}
                 onClick={() => onChangeScene(item.id)}
-                className={`text-sm font-bold uppercase tracking-widest transition-all hover:text-[#C1FF00] ${
-                  active === item.id ? 'text-[#C1FF00]' : 'text-white/55'
-                }`}
+                className={`text-sm font-bold uppercase tracking-widest transition-all hover:text-[#C1FF00] ${active === item.id ? 'text-[#C1FF00]' : 'text-white/55'
+                  }`}
               >
                 {item.label}
               </button>
@@ -919,9 +917,8 @@ function Header({ active, onChangeScene }: { active: SceneId; onChangeScene: (s:
           <div className="flex items-center gap-3">
             <button
               onClick={() => { onChangeScene('hero'); setMobileOpen(false); }}
-              className={`text-[9px] font-black uppercase tracking-[0.1em] transition-colors hover:text-[#C1FF00] whitespace-nowrap ${
-                active === 'hero' ? 'text-[#C1FF00]' : 'text-white/55'
-              }`}
+              className={`text-[9px] font-black uppercase tracking-[0.1em] transition-colors hover:text-[#C1FF00] whitespace-nowrap ${active === 'hero' ? 'text-[#C1FF00]' : 'text-white/55'
+                }`}
             >
               Net Oynar
             </button>
@@ -978,11 +975,10 @@ function Header({ active, onChangeScene }: { active: SceneId; onChangeScene: (s:
                 <button
                   key={item.id}
                   onClick={() => { onChangeScene(item.id); setMobileOpen(false); }}
-                  className={`text-left px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition-all ${
-                    active === item.id
+                  className={`text-left px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition-all ${active === item.id
                       ? 'text-[#C1FF00] bg-[#C1FF00]/8'
                       : 'text-white/60 hover:text-white hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </button>
@@ -1017,13 +1013,13 @@ function HeroView({ onNext }: { onNext: () => void }) {
         <span className="inline-block mt-2 pr-4 text-transparent bg-clip-text bg-gradient-to-r from-[#C1FF00] to-[#00F5FF] leading-[1.02] pt-1 pb-1">
           VİTRİN BİZİM
         </span>
-          </h1>
+      </h1>
       <p className="text-xl text-[#8A9A98] max-w-lg leading-relaxed font-medium">
         Yeteneklerin karanlıkta kalmasın. Videonu yükle, Net Oynar ekibimiz seni vitrine çıkartsın. Artık keşfedilmek tesadüf değil.
       </p>
       <div className="flex gap-6 pt-4">
         <button onClick={onNext}
-                className="px-12 py-6 bg-[#C1FF00] text-[#051A18] rounded-2xl font-black text-xl uppercase tracking-tight shadow-[0_20px_40px_rgba(193,255,0,0.2)] hover:shadow-[0_20px_60px_rgba(193,255,0,0.4)] hover:-translate-y-1 transition-all">
+          className="px-12 py-6 bg-[#C1FF00] text-[#051A18] rounded-2xl font-black text-xl uppercase tracking-tight shadow-[0_20px_40px_rgba(193,255,0,0.2)] hover:shadow-[0_20px_60px_rgba(193,255,0,0.4)] hover:-translate-y-1 transition-all">
           Şimdi Başvur
         </button>
       </div>
@@ -1126,10 +1122,10 @@ function ApplyForm({
   const toggleMainPosition = (pos: string) => {
     setFormData(prev => {
       const isSelected = prev.positions.includes(pos);
-      const newPositions = isSelected 
-        ? prev.positions.filter(p => p !== pos) 
+      const newPositions = isSelected
+        ? prev.positions.filter(p => p !== pos)
         : [...prev.positions, pos];
-      
+
       let newSubPositions = prev.subPositions;
       if (isSelected) {
         const subsToRemove = SUB_POSITIONS[pos] || [];
@@ -1186,10 +1182,10 @@ function ApplyForm({
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
+
     // Sadece sayı girilmesine izin verilen alanlar
     const numericFields = ['goals', 'assists', 'matchesPlayed', 'concededGoals', 'cleanSheets', 'age', 'height', 'weight'];
-    
+
     if (numericFields.includes(name)) {
       // Sadece rakamları al, harfleri temizle
       const numericValue = value.replace(/\D/g, '');
@@ -1197,7 +1193,7 @@ function ApplyForm({
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
-    
+
     setError('');
   };
 
@@ -1223,7 +1219,7 @@ function ApplyForm({
         'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
         'Ç': 'C', 'Ğ': 'G', 'İ': 'I', 'Ö': 'O', 'Ş': 'S', 'Ü': 'U'
       };
-      
+
       const cleanName = (formData.fullName || 'unknown')
         .replace(/[çğıöşüÇĞİÖŞÜ]/g, (m) => trMap[m])
         .toUpperCase()
@@ -1244,16 +1240,16 @@ function ApplyForm({
           const now = Date.now();
           const timeDiff = (now - lastProgressTime.current) / 1000; // seconds
           const bytesDiff = snapshot.bytesTransferred - lastProgressBytes.current;
-          
+
           if (timeDiff > 0.5) { // Update speed every 0.5 seconds
             const speedMBps = (bytesDiff / (1024 * 1024)) / timeDiff;
             setUploadSpeed(speedMBps);
-            
+
             // Calculate time remaining
             const remainingBytes = snapshot.totalBytes - snapshot.bytesTransferred;
             const remainingSeconds = speedMBps > 0 ? remainingBytes / (1024 * 1024) / speedMBps : 0;
             setTimeRemaining(Math.max(0, Math.round(remainingSeconds)));
-            
+
             lastProgressTime.current = now;
             lastProgressBytes.current = snapshot.bytesTransferred;
           }
@@ -1293,54 +1289,54 @@ function ApplyForm({
       e.target.value = '';
       return;
     }
-    
+
     // Cancel any ongoing upload
     if (uploadTask) {
       uploadTask.cancel();
       setUploadTask(null);
     }
-    
+
     // Reset states
     setUploadProgress(0);
     setIsUploading(false);
     setVideoStoragePath(null);
     setUploadSpeed(0);
     setTimeRemaining(0);
-    
+
     // Video duration validation (30-60 seconds)
     const video = document.createElement('video');
     video.preload = 'metadata';
-    
+
     video.onloadedmetadata = () => {
       window.URL.revokeObjectURL(video.src);
       const duration = video.duration;
-      
+
       if (duration < 30) {
         setError('Video en az 30 saniye olmalıdır');
         e.target.value = ''; // Reset input
         return;
       }
-      
+
       if (duration > 60) {
         setError('Video en fazla 60 saniye olmalıdır');
         e.target.value = ''; // Reset input
         return;
       }
-      
+
       // Video is valid, proceed with upload
       setFormData(prev => ({ ...prev, videoFile: file }));
       setError('');
-      
+
       // Start upload immediately in background
       startVideoUpload(file);
     };
-    
+
     video.onerror = () => {
       window.URL.revokeObjectURL(video.src);
       setError('Video dosyası okunamadı, lütfen geçerli bir video seçin');
       e.target.value = ''; // Reset input
     };
-    
+
     video.src = URL.createObjectURL(file);
   };
 
@@ -1388,7 +1384,7 @@ function ApplyForm({
     if (s === 2) {
       if (!formData.team.trim()) return setError('Takım bilgisi gerekli');
       if (formData.positions.length === 0) return setError('Mevki seçiniz');
-      
+
       // Seçilen ana mevkilerin alt mevkileri varsa kontrol et
       for (const pos of formData.positions) {
         if (SUB_POSITIONS[pos]) {
@@ -1396,11 +1392,11 @@ function ApplyForm({
           if (!hasSub) return setError(`${pos} için en az bir alt mevki seçmelisiniz`);
         }
       }
-      
+
       if (['Gelişim Altyapısı', 'Elit Altyapı'].includes(formData.league) && !formData.uCategory) {
         return setError('U Kategorisi seçiniz');
       }
-      
+
       if (!formData.dominantFoot) return setError('Baskın ayak seçiniz');
       if (!formData.league) return setError('Lig seçiniz');
       if (!formData.matchesPlayed) return setError('Oynadığınız maç sayısını girmelisiniz');
@@ -1415,14 +1411,14 @@ function ApplyForm({
       if (isFieldPlayer && (!formData.goals || !formData.assists)) {
         return setError('Gol ve asist sayılarını girmelisiniz');
       }
-      
+
       return true;
     }
 
     // Step 3: personal
     if (s === 3) {
       if (!formData.birthDate) return setError('Doğum tarihi gerekli');
-      
+
       // Yaş hesaplama
       const birthDate = new Date(formData.birthDate);
       const today = new Date();
@@ -1457,13 +1453,13 @@ function ApplyForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     // Duplicate submit kontrolü - hem state hem ref ile
     if (isSubmitting || hasSubmittedRef.current) {
       console.log('Duplicate submit prevented');
       return; // Zaten submit ediliyor veya edildi, tekrar çalıştırma
     }
-    
+
     // Full validation across steps (Step 1: Video, Step 2: Futbol, Step 3: Kişisel)
     if (!validateStep(1) || !validateStep(2) || !validateStep(3)) return;
 
@@ -1490,7 +1486,7 @@ function ApplyForm({
     // Submit işaretini koy - duplicate'i önlemek için
     hasSubmittedRef.current = true;
     setIsSubmitting(true);
-    
+
     try {
       const submissionData = {
         fullName: formData.fullName.trim(),
@@ -1520,15 +1516,15 @@ function ApplyForm({
         status: 'pending',
         createdAt: serverTimestamp(),
       };
-      
+
       await addDoc(collection(db, 'submissions'), submissionData);
       console.log('Submission created successfully');
-      
+
       // Reset form state
       setUploadTask(null);
       setVideoStoragePath(null);
       setIsSubmitting(false);
-      
+
       // Direkt success sayfasına git (Cloud Function arka planda çalışacak)
       onSuccess();
     } catch (err: any) {
@@ -1549,7 +1545,7 @@ function ApplyForm({
         <h2 className="text-5xl font-black italic tracking-tighter uppercase">
           Oyuncu <span className="text-[#C1FF00]">Başvurusu</span>
         </h2>
-        </div>
+      </div>
 
       {/* Progress (minimal) */}
       <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-white/35">
@@ -1568,8 +1564,8 @@ function ApplyForm({
             initial={{ opacity: 0, x: stepDirection * 20, scale: 0.96 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: stepDirection * -20, scale: 0.96 }}
-            transition={{ 
-              duration: 0.4, 
+            transition={{
+              duration: 0.4,
               ease: [0.16, 1, 0.3, 1],
               opacity: { duration: 0.3 },
               scale: { duration: 0.4 }
@@ -1578,328 +1574,324 @@ function ApplyForm({
             {/* STEP 1: Video */}
             {step === 1 && (
               <div className="space-y-4 sm:space-y-6">
-            <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45">
-              Bilgiler & Video
-            </div>
-            <div className="space-y-4">
-              <FormInput 
-                label="Ad Soyad" 
-                name="fullName" 
-                value={formData.fullName} 
-                onChange={handleInputChange} 
-                placeholder="İsim Soyisim" 
-              />
-            </div>
-            <div className="space-y-2 sm:space-y-3">
-              <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.25em] ml-1">
-                Video (30-60 saniye aralığında olmalıdır)
-              </label>
-              
-              {!formData.videoFile ? (
-              <label className="flex flex-col items-center justify-center border border-white/10 rounded-2xl py-10 bg-white/5 cursor-pointer hover:bg-white/7 transition-all group">
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" className="text-white/50 group-hover:text-[#C1FF00] transition-colors group-hover:scale-110 transition-transform">
-                    <path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    <path d="M8 12h8M8 9h5M8 15h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                <span className="text-[10px] font-black text-white/35 uppercase mt-3 tracking-widest">
-                  Maç videonu seç
-                </span>
-                  <input ref={fileInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoChange} />
-              </label>
-              ) : (
+                <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45">
+                  Bilgiler & Video
+                </div>
+                <div className="space-y-4">
+                  <FormInput
+                    label="Ad Soyad"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    placeholder="İsim Soyisim"
+                  />
+                </div>
                 <div className="space-y-2 sm:space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 border border-white/10 rounded-2xl p-3 sm:p-4 bg-white/5">
-                    <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#C1FF00] flex-shrink-0 sm:w-6 sm:h-6">
-                        <path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.25em] ml-1">
+                    Video (30-60 saniye aralığında olmalıdır)
+                  </label>
+
+                  {!formData.videoFile ? (
+                    <label className="flex flex-col items-center justify-center border border-white/10 rounded-2xl py-10 bg-white/5 cursor-pointer hover:bg-white/7 transition-all group">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" className="text-white/50 group-hover:text-[#C1FF00] transition-colors group-hover:scale-110 transition-transform">
+                        <path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                        <path d="M8 12h8M8 9h5M8 15h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                       </svg>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-[11px] sm:text-xs text-[#C1FF00] font-bold truncate">
-                          {formData.videoFile.name}
-                        </p>
-                        <p className="text-[9px] sm:text-[10px] text-white/40 font-medium">
-                          {(formData.videoFile.size / (1024 * 1024)).toFixed(2)} MB
-                          {uploadProgress === 100 && videoStoragePath && (
-                            <span className="ml-2 text-[#C1FF00]">✓ Yüklendi</span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    {uploadProgress === 0 && (
-                      <button
-                        type="button"
-                        onClick={handleCancelVideo}
-                        className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all flex-shrink-0 self-start sm:self-auto"
-                      >
-                        İptal
-                      </button>
-                    )}
-                  </div>
-                  {uploadProgress > 0 ? (
-                    <button
-                      type="button"
-                      onClick={handleCancelUploadAndSelectNew}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-current sm:w-4 sm:h-4">
-                        <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      İptal Et
-                    </button>
-                  ) : (
-                    <label className="flex items-center justify-center gap-2 text-[9px] sm:text-[10px] font-black text-white/50 uppercase tracking-widest cursor-pointer hover:text-[#C1FF00] transition-colors py-1">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-current sm:w-4 sm:h-4">
-                        <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      Yeni video seç
+                      <span className="text-[10px] font-black text-white/35 uppercase mt-3 tracking-widest">
+                        Maç videonu seç
+                      </span>
                       <input ref={fileInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoChange} />
                     </label>
+                  ) : (
+                    <div className="space-y-2 sm:space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 border border-white/10 rounded-2xl p-3 sm:p-4 bg-white/5">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#C1FF00] flex-shrink-0 sm:w-6 sm:h-6">
+                            <path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                          </svg>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[11px] sm:text-xs text-[#C1FF00] font-bold truncate">
+                              {formData.videoFile.name}
+                            </p>
+                            <p className="text-[9px] sm:text-[10px] text-white/40 font-medium">
+                              {(formData.videoFile.size / (1024 * 1024)).toFixed(2)} MB
+                              {uploadProgress === 100 && videoStoragePath && (
+                                <span className="ml-2 text-[#C1FF00]">✓ Yüklendi</span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        {uploadProgress === 0 && (
+                          <button
+                            type="button"
+                            onClick={handleCancelVideo}
+                            className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all flex-shrink-0 self-start sm:self-auto"
+                          >
+                            İptal
+                          </button>
+                        )}
+                      </div>
+                      {uploadProgress > 0 ? (
+                        <button
+                          type="button"
+                          onClick={handleCancelUploadAndSelectNew}
+                          className="w-full flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-current sm:w-4 sm:h-4">
+                            <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                          </svg>
+                          İptal Et
+                        </button>
+                      ) : (
+                        <label className="flex items-center justify-center gap-2 text-[9px] sm:text-[10px] font-black text-white/50 uppercase tracking-widest cursor-pointer hover:text-[#C1FF00] transition-colors py-1">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-current sm:w-4 sm:h-4">
+                            <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                          </svg>
+                          Yeni video seç
+                          <input ref={fileInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoChange} />
+                        </label>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
 
-            {(uploadProgress > 0 || isUploading) && (
-              <div className="space-y-1.5 sm:space-y-2">
-                <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/50">
-                  <span>
-                    {uploadProgress === 100 ? 'Yükleme tamamlandı!' : 'Yükleniyor...'}
-                    {uploadSpeed > 0 && uploadProgress < 100 && (
-                      <span className="ml-2 text-white/40 normal-case">
-                        {uploadSpeed.toFixed(1)} MB/s
-                        {timeRemaining > 0 && ` · ~${timeRemaining}s`}
+                {(uploadProgress > 0 || isUploading) && (
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/50">
+                      <span>
+                        {uploadProgress === 100 ? 'Yükleme tamamlandı!' : 'Yükleniyor...'}
+                        {uploadSpeed > 0 && uploadProgress < 100 && (
+                          <span className="ml-2 text-white/40 normal-case">
+                            {uploadSpeed.toFixed(1)} MB/s
+                            {timeRemaining > 0 && ` · ~${timeRemaining}s`}
+                          </span>
+                        )}
                       </span>
-                    )}
-                  </span>
-                  <span>{uploadProgress}%</span>
-                </div>
-                <div className="h-1 sm:h-1.5 w-full bg-white/5 rounded-full overflow-hidden relative">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${uploadProgress}%` }}
-                  className="h-full bg-[#C1FF00]"
-                />
-                </div>
-              </div>
-            )}
+                      <span>{uploadProgress}%</span>
+                    </div>
+                    <div className="h-1 sm:h-1.5 w-full bg-white/5 rounded-full overflow-hidden relative">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${uploadProgress}%` }}
+                        className="h-full bg-[#C1FF00]"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* STEP 2: Futbol Bilgileri */}
             {step === 2 && (
               <div className="space-y-6">
-            <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45">
-              Futbol bilgileri
-            </div>
-            {/* Futbol Bilgileri Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 pt-2">
-              {/* Sol Sütun: Takım, Lig, Mevki */}
-              <div className="space-y-6">
-                <FormInput label="Takım" name="team" value={formData.team} onChange={handleInputChange} placeholder="Kulüp / Amatör takım" />
-                <FormSelect label="Lig" name="league" value={formData.league} onChange={handleInputChange} options={LEAGUES} />
-                
-                {['Gelişim Altyapısı', 'Elit Altyapı'].includes(formData.league) && (
-                  <motion.div
-                    key="uCategory-div"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="mt-4"
-                  >
-                    <label className="text-[10px] font-black uppercase text-[#C1FF00]/80 tracking-[0.2em] ml-1 mb-3 block">
-                      U Kategorisi *
-                    </label>
-                    <div className="grid grid-cols-5 gap-2">
-                      {U_CATEGORIES.map(uc => (
-                        <button
-                          key={uc}
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, uCategory: uc }));
-                          }}
-                          className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border ${
-                            formData.uCategory === uc
-                              ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
-                              : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
-                          }`}
-                        >
-                          {uc}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-                
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.2em] ml-1">
-                    Ana Mevki *
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {POSITIONS.map(pos => (
-                      <button
-                        key={pos}
-                        type="button"
-                        onClick={() => toggleMainPosition(pos)}
-                        className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all ${
-                          formData.positions.includes(pos)
-                            ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00]'
-                            : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'
-                        }`}
-                      >
-                        {pos}
-                      </button>
-                    ))}
-                  </div>
+                <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45">
+                  Futbol bilgileri
+                </div>
+                {/* Futbol Bilgileri Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 pt-2">
+                  {/* Sol Sütun: Takım, Lig, Mevki */}
+                  <div className="space-y-6">
+                    <FormInput label="Takım" name="team" value={formData.team} onChange={handleInputChange} placeholder="Kulüp / Amatör takım" />
+                    <FormSelect label="Lig" name="league" value={formData.league} onChange={handleInputChange} options={LEAGUES} />
 
-                  <AnimatePresence>
-                    {formData.positions.map(pos => SUB_POSITIONS[pos] && (
+                    {['Gelişim Altyapısı', 'Elit Altyapı'].includes(formData.league) && (
                       <motion.div
-                        key={`sub-${pos}`}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-4 space-y-3 overflow-hidden"
+                        key="uCategory-div"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="mt-4"
                       >
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C1FF00]/60 ml-1">
-                          {pos} Alt Mevkileri *
+                        <label className="text-[10px] font-black uppercase text-[#C1FF00]/80 tracking-[0.2em] ml-1 mb-3 block">
+                          U Kategorisi *
                         </label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {SUB_POSITIONS[pos].map(sub => (
+                        <div className="grid grid-cols-5 gap-2">
+                          {U_CATEGORIES.map(uc => (
                             <button
-                              key={sub}
+                              key={uc}
                               type="button"
-                              onClick={() => toggleSubPosition(sub)}
-                              className={`py-2.5 px-4 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all flex items-center justify-between ${
-                                formData.subPositions.includes(sub)
-                                  ? 'bg-[#C1FF00]/10 text-[#C1FF00] border-[#C1FF00]/40'
-                                  : 'bg-white/5 text-white/30 border-white/10 hover:border-white/20'
-                              }`}
+                              onClick={() => {
+                                setFormData(prev => ({ ...prev, uCategory: uc }));
+                              }}
+                              className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border ${formData.uCategory === uc
+                                  ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
+                                  : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
+                                }`}
                             >
-                              {sub}
-                              {formData.subPositions.includes(sub) && (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
-                                  <path d="M20 6L9 17L4 12" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                              )}
+                              {uc}
                             </button>
                           ))}
                         </div>
                       </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </div>
+                    )}
 
-              {/* Sağ Sütun: Baskın Ayak, Milli Takım Geçmişi */}
-              <div className="space-y-6">
-                <FormSelect label="Baskın Ayak" name="dominantFoot" value={formData.dominantFoot} onChange={handleInputChange} options={DOMINANT_FEET} />
-                
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.2em] ml-1">
-                    Milli Takım Geçmişi (Opsiyonel)
-                  </label>
-                  <div className="grid grid-cols-4 gap-2">
-                    {NATIONAL_TEAMS.map(team => (
-                      <button
-                        key={team}
-                        type="button"
-                        onClick={() => toggleNationalTeam(team)}
-                        className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-wider border transition-all ${
-                          formData.nationalTeam.includes(team)
-                            ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
-                            : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
-                        }`}
-                      >
-                        {team}
-                      </button>
-                    ))}
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.2em] ml-1">
+                        Ana Mevki *
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {POSITIONS.map(pos => (
+                          <button
+                            key={pos}
+                            type="button"
+                            onClick={() => toggleMainPosition(pos)}
+                            className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all ${formData.positions.includes(pos)
+                                ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00]'
+                                : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'
+                              }`}
+                          >
+                            {pos}
+                          </button>
+                        ))}
+                      </div>
+
+                      <AnimatePresence>
+                        {formData.positions.map(pos => SUB_POSITIONS[pos] && (
+                          <motion.div
+                            key={`sub-${pos}`}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mt-4 space-y-3 overflow-hidden"
+                          >
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C1FF00]/60 ml-1">
+                              {pos} Alt Mevkileri *
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                              {SUB_POSITIONS[pos].map(sub => (
+                                <button
+                                  key={sub}
+                                  type="button"
+                                  onClick={() => toggleSubPosition(sub)}
+                                  className={`py-2.5 px-4 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all flex items-center justify-between ${formData.subPositions.includes(sub)
+                                      ? 'bg-[#C1FF00]/10 text-[#C1FF00] border-[#C1FF00]/40'
+                                      : 'bg-white/5 text-white/30 border-white/10 hover:border-white/20'
+                                    }`}
+                                >
+                                  {sub}
+                                  {formData.subPositions.includes(sub) && (
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
+                                      <path d="M20 6L9 17L4 12" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+
+                  {/* Sağ Sütun: Baskın Ayak, Milli Takım Geçmişi */}
+                  <div className="space-y-6">
+                    <FormSelect label="Baskın Ayak" name="dominantFoot" value={formData.dominantFoot} onChange={handleInputChange} options={DOMINANT_FEET} />
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.2em] ml-1">
+                        Milli Takım Geçmişi (Opsiyonel)
+                      </label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {NATIONAL_TEAMS.map(team => (
+                          <button
+                            key={team}
+                            type="button"
+                            onClick={() => toggleNationalTeam(team)}
+                            className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-wider border transition-all ${formData.nationalTeam.includes(team)
+                                ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
+                                : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
+                              }`}
+                          >
+                            {team}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="pt-2">
-              <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45 mb-4">
-                Sezon İstatistikleri
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                <FormInput 
-                  label="Maç" 
-                  name="matchesPlayed" 
-                  type="text" 
-                  inputMode="numeric" 
-                  value={formData.matchesPlayed} 
-                  onChange={handleInputChange} 
-                  placeholder="0" 
-                />
-                
-                {formData.positions.includes('Kaleci') && formData.positions.length === 1 ? (
-                  <>
-                    <FormInput 
-                      label="Yenilen Gol" 
-                      name="concededGoals" 
-                      type="text" 
-                      inputMode="numeric" 
-                      value={formData.concededGoals} 
-                      onChange={handleInputChange} 
-                      placeholder="0" 
+                <div className="pt-2">
+                  <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45 mb-4">
+                    Sezon İstatistikleri
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <FormInput
+                      label="Maç"
+                      name="matchesPlayed"
+                      type="text"
+                      inputMode="numeric"
+                      value={formData.matchesPlayed}
+                      onChange={handleInputChange}
+                      placeholder="0"
                     />
-                    <FormInput 
-                      label="Kaleyi Gole Kapatma" 
-                      name="cleanSheets" 
-                      type="text" 
-                      inputMode="numeric" 
-                      value={formData.cleanSheets} 
-                      onChange={handleInputChange} 
-                      placeholder="0" 
-                    />
-                  </>
-                ) : (
-                  <>
-                    <FormInput 
-                      label="Gol" 
-                      name="goals" 
-                      type="text" 
-                      inputMode="numeric" 
-                      value={formData.goals} 
-                      onChange={handleInputChange} 
-                      placeholder="0" 
-                    />
-                    <FormInput 
-                      label="Asist" 
-                      name="assists" 
-                      type="text" 
-                      inputMode="numeric" 
-                      value={formData.assists} 
-                      onChange={handleInputChange} 
-                      placeholder="0" 
-                    />
-                    {formData.positions.includes('Kaleci') && (
+
+                    {formData.positions.includes('Kaleci') && formData.positions.length === 1 ? (
                       <>
-                        <FormInput 
-                          label="Yenilen Gol" 
-                          name="concededGoals" 
-                          type="text" 
-                          inputMode="numeric" 
-                          value={formData.concededGoals} 
-                          onChange={handleInputChange} 
-                          placeholder="0" 
+                        <FormInput
+                          label="Yenilen Gol"
+                          name="concededGoals"
+                          type="text"
+                          inputMode="numeric"
+                          value={formData.concededGoals}
+                          onChange={handleInputChange}
+                          placeholder="0"
                         />
-                        <FormInput 
-                          label="Kaleyi Gole Kapatma" 
-                          name="cleanSheets" 
-                          type="text" 
-                          inputMode="numeric" 
-                          value={formData.cleanSheets} 
-                          onChange={handleInputChange} 
-                          placeholder="0" 
+                        <FormInput
+                          label="Kaleyi Gole Kapatma"
+                          name="cleanSheets"
+                          type="text"
+                          inputMode="numeric"
+                          value={formData.cleanSheets}
+                          onChange={handleInputChange}
+                          placeholder="0"
                         />
                       </>
+                    ) : (
+                      <>
+                        <FormInput
+                          label="Gol"
+                          name="goals"
+                          type="text"
+                          inputMode="numeric"
+                          value={formData.goals}
+                          onChange={handleInputChange}
+                          placeholder="0"
+                        />
+                        <FormInput
+                          label="Asist"
+                          name="assists"
+                          type="text"
+                          inputMode="numeric"
+                          value={formData.assists}
+                          onChange={handleInputChange}
+                          placeholder="0"
+                        />
+                        {formData.positions.includes('Kaleci') && (
+                          <>
+                            <FormInput
+                              label="Yenilen Gol"
+                              name="concededGoals"
+                              type="text"
+                              inputMode="numeric"
+                              value={formData.concededGoals}
+                              onChange={handleInputChange}
+                              placeholder="0"
+                            />
+                            <FormInput
+                              label="Kaleyi Gole Kapatma"
+                              name="cleanSheets"
+                              type="text"
+                              inputMode="numeric"
+                              value={formData.cleanSheets}
+                              onChange={handleInputChange}
+                              placeholder="0"
+                            />
+                          </>
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-                <FormSelect label="Sezon" name="season" value={formData.season} onChange={handleInputChange} options={SEASONS} />
-              </div>
-            </div>
+                    <FormSelect label="Sezon" name="season" value={formData.season} onChange={handleInputChange} options={SEASONS} />
+                  </div>
+                </div>
               </div>
             )}
 
@@ -1909,7 +1901,7 @@ function ApplyForm({
                 <div className="text-[10px] font-black uppercase tracking-[0.25em] text-white/45">
                   Kişisel bilgiler
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                   {/* Sol Kolon: Yaş, Boy, Kilo + Consent */}
                   <div className="space-y-6">
@@ -1939,10 +1931,10 @@ function ApplyForm({
                       onChange={handleInputChange}
                       placeholder="Örn: 75"
                     />
-                    
+
                     {/* Consent Checkbox (Sol Kolona Taşındı) */}
                     <div className="flex items-center gap-3 bg-white/5 border-l-2 border-[#C1FF00]/40 p-4 rounded-r-xl hover:bg-white/[0.08] transition-all cursor-pointer group"
-                         onClick={() => !isSubmitting && setFormData(prev => ({ ...prev, consent: !prev.consent }))}>
+                      onClick={() => !isSubmitting && setFormData(prev => ({ ...prev, consent: !prev.consent }))}>
                       <input
                         type="checkbox"
                         id="consent-checkbox-dynamic"
@@ -1951,7 +1943,7 @@ function ApplyForm({
                         className="w-5 h-5 accent-[#C1FF00] flex-shrink-0 cursor-pointer"
                         required
                       />
-                      <label 
+                      <label
                         htmlFor="consent-checkbox-dynamic"
                         className="text-[10px] text-white/55 font-black uppercase tracking-widest cursor-pointer select-none group-hover:text-white transition-colors leading-tight"
                       >
@@ -1983,19 +1975,19 @@ function ApplyForm({
 
                   {/* Sağ Kolon: Şehir, Instagram ve Telefon + Gizlilik */}
                   <div className="space-y-6">
-                    <FormInput 
-                      label="Şehir" 
-                      name="city" 
-                      value={formData.city} 
-                      onChange={handleInputChange} 
-                      placeholder="Yaşadığınız şehir" 
+                    <FormInput
+                      label="Şehir"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      placeholder="Yaşadığınız şehir"
                     />
-                    <FormInput 
-                      label="Instagram" 
-                      name="instagram" 
-                      value={formData.instagram} 
-                      onChange={handleInputChange} 
-                      placeholder="@hesabiniz" 
+                    <FormInput
+                      label="Instagram"
+                      name="instagram"
+                      value={formData.instagram}
+                      onChange={handleInputChange}
+                      placeholder="@hesabiniz"
                     />
                     <FormInput
                       label="Telefon (opsiyonel)"
@@ -2026,11 +2018,11 @@ function ApplyForm({
                       <span>{uploadProgress}%</span>
                     </div>
                     <div className="h-1 sm:h-1.5 w-full bg-white/10 rounded-full overflow-hidden relative">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${uploadProgress}%` }}
-                      className="h-full bg-[#C1FF00]"
-                    />
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${uploadProgress}%` }}
+                        className="h-full bg-[#C1FF00]"
+                      />
                     </div>
                   </div>
                 )}
@@ -2042,7 +2034,7 @@ function ApplyForm({
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl text-red-500 text-xs font-bold uppercase">
             {error}
-        </div>
+          </div>
         )}
 
         {/* Controls Bar - Responsive & Aligned */}
@@ -2110,12 +2102,12 @@ function ApplyForm({
                 disabled={isSubmitting || (isUploading && uploadProgress < 100) || !videoStoragePath}
                 className="w-full sm:w-auto min-h-[50px] sm:min-h-0 sm:h-auto px-4 sm:px-12 py-4 sm:py-5 rounded-2xl bg-[#C1FF00] text-[#051A18] font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-[0_14px_30px_rgba(193,255,0,0.18)] hover:shadow-[0_18px_40px_rgba(193,255,0,0.28)] transition-all disabled:opacity-50 flex items-center justify-center text-center leading-tight"
               >
-                {isUploading && uploadProgress < 100 
-                  ? `Yükleniyor %${uploadProgress}` 
-                  : isSubmitting 
-                    ? 'Gönderiliyor...' 
-                    : videoStoragePath 
-                      ? 'Başvuruyu Gönder' 
+                {isUploading && uploadProgress < 100
+                  ? `Yükleniyor %${uploadProgress}`
+                  : isSubmitting
+                    ? 'Gönderiliyor...'
+                    : videoStoragePath
+                      ? 'Başvuruyu Gönder'
                       : 'Video Seçiniz'}
               </button>
             )}
@@ -2446,10 +2438,10 @@ function FormInput({ label, value, ...props }: any) {
   return (
     <div className="space-y-2">
       <label className="text-[10px] font-black uppercase text-white/40 tracking-[0.2em] ml-1">{label}</label>
-      <input 
-        {...props} 
+      <input
+        {...props}
         value={value}
-        className={`w-full bg-[#0A2E2A] border ${hasValue ? 'border-[#C1FF00]/40 text-[#C1FF00]' : 'border-white/5 text-white/70'} rounded-xl px-5 py-4 text-sm font-black focus:border-[#C1FF00] outline-none transition-all shadow-inner`} 
+        className={`w-full bg-[#0A2E2A] border ${hasValue ? 'border-[#C1FF00]/40 text-[#C1FF00]' : 'border-white/5 text-white/70'} rounded-xl px-5 py-4 text-sm font-black focus:border-[#C1FF00] outline-none transition-all shadow-inner`}
       />
     </div>
   );
@@ -2463,7 +2455,7 @@ function FormDateInput({ label, name, value, onChange, min, max }: any) {
   const containerRef = useRef<HTMLDivElement>(null);
   const monthRef = useRef<HTMLDivElement>(null);
   const yearRef = useRef<HTMLDivElement>(null);
-  
+
   const [currentDate, setCurrentDate] = useState(() => {
     if (value) return new Date(value);
     return new Date(2001, 0, 1);
@@ -2525,7 +2517,7 @@ function FormDateInput({ label, name, value, onChange, min, max }: any) {
             {formatDateLabel(value)}
           </span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className={`transition-transform duration-300 ${isOpen ? 'text-[#C1FF00]' : 'text-white/20'}`}>
-            <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
@@ -2610,7 +2602,7 @@ function FormDateInput({ label, name, value, onChange, min, max }: any) {
                   <div key={d} className="text-[9px] font-black text-white/25 uppercase tracking-tighter text-center">{d}</div>
                 ))}
               </div>
-              
+
               <div className="grid grid-cols-7 gap-1 place-items-center">
                 {Array.from({ length: (firstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth()) + 6) % 7 }).map((_, i) => (
                   <div key={`empty-${i}`} className="h-9 w-9" />
@@ -2623,11 +2615,10 @@ function FormDateInput({ label, name, value, onChange, min, max }: any) {
                       key={day}
                       type="button"
                       onClick={() => handleDateSelect(day)}
-                      className={`h-9 w-9 rounded-xl text-xs font-black transition-all flex items-center justify-center ${
-                        isSelected 
-                        ? 'bg-[#C1FF00] text-[#051A18] shadow-[0_0_15px_rgba(193,255,0,0.3)] scale-110' 
-                        : 'text-white/60 hover:bg-[#C1FF00]/10 hover:text-[#C1FF00]'
-                      }`}
+                      className={`h-9 w-9 rounded-xl text-xs font-black transition-all flex items-center justify-center ${isSelected
+                          ? 'bg-[#C1FF00] text-[#051A18] shadow-[0_0_15px_rgba(193,255,0,0.3)] scale-110'
+                          : 'text-white/60 hover:bg-[#C1FF00]/10 hover:text-[#C1FF00]'
+                        }`}
                     >
                       {day}
                     </button>
@@ -2688,9 +2679,8 @@ function FormSelect({ label, options, name, value, onChange }: any) {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`relative w-full flex items-center justify-between bg-[#0A2E2A] border ${
-            isOpen ? 'border-[#C1FF00]' : 'border-white/5'
-          } rounded-xl px-5 py-4 text-sm font-bold transition-all text-left outline-none shadow-lg`}
+          className={`relative w-full flex items-center justify-between bg-[#0A2E2A] border ${isOpen ? 'border-[#C1FF00]' : 'border-white/5'
+            } rounded-xl px-5 py-4 text-sm font-bold transition-all text-left outline-none shadow-lg`}
         >
           <span className={!value ? 'text-white/40' : 'text-[#C1FF00]'}>
             {value || 'Seç'}
@@ -2728,11 +2718,10 @@ function FormSelect({ label, options, name, value, onChange }: any) {
                     key={option}
                     type="button"
                     onClick={() => handleSelect(option)}
-                    className={`w-full text-left px-4 py-3.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${
-                      value === option
+                    className={`w-full text-left px-4 py-3.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${value === option
                         ? 'bg-[#C1FF00] text-[#051A18]'
                         : 'text-white/70 hover:bg-white/5 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <span className="uppercase tracking-wide">{option}</span>
                     {value === option && (
@@ -2775,7 +2764,7 @@ function ProcessView() {
           { t: 'Vitrine Çıkış', d: 'Net oynar ekibi, YILDIZ kategorisine giren futbolcuları özel olarak çekmeye gider. Diğer kategorideki futbolcuların gönderdikleri videolar, Net Oynar vitrininde paylaşılır.' }
         ].map((item, i) => (
           <div key={i} className="flex gap-6 group">
-            <div className="w-14 h-14 shrink-0 rounded-2xl border border-[#C1FF00]/30 flex items-center justify-center font-black text-[#C1FF00] text-xl group-hover:bg-[#C1FF00] group-hover:text-[#051A18] transition-all">0{i+1}</div>
+            <div className="w-14 h-14 shrink-0 rounded-2xl border border-[#C1FF00]/30 flex items-center justify-center font-black text-[#C1FF00] text-xl group-hover:bg-[#C1FF00] group-hover:text-[#051A18] transition-all">0{i + 1}</div>
             <div>
               <h4 className="font-black text-xl uppercase tracking-tight italic">{item.t}</h4>
               <p className="text-[#8A9A98] font-medium mt-2 max-w-sm leading-relaxed">{item.d}</p>
@@ -2843,9 +2832,9 @@ function FAQView() {
   return (
     <div className="space-y-12 -mt-12">
       <div className="overflow-visible">
-      <h2 className="text-5xl font-black italic tracking-tighter uppercase">
-        Sık <span className="text-[#C1FF00]">Sorulanlar</span>
-      </h2>
+        <h2 className="text-5xl font-black italic tracking-tighter uppercase">
+          Sık <span className="text-[#C1FF00]">Sorulanlar</span>
+        </h2>
       </div>
       <div className="divide-y divide-white/10">
         {faqs.map((f, i) => (
@@ -2878,7 +2867,7 @@ function FAQView() {
             </AnimatePresence>
           </div>
         ))}
-        </div>
+      </div>
     </div>
   );
 }
@@ -2897,9 +2886,15 @@ function SuccessView({ onReset }: { onReset: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h2 className="text-6xl md:text-7xl font-black italic tracking-tighter uppercase leading-[1.1]">
-          Başvurun <br />
-          <span className="text-[#C1FF00]">Alındı!</span>
+        <div className="flex justify-center mb-3 md:mb-4">
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#C1FF00]/10 border border-[#C1FF00]/30 shadow-[0_0_30px_rgba(193,255,0,0.15)] flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#C1FF00]">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </div>
+        </div>
+        <h2 className="text-3xl md:text-5xl lg:text-5xl font-black italic tracking-tight uppercase text-transparent bg-clip-text bg-gradient-to-br from-white to-white/70">
+          Başvurun <span className="text-[#C1FF00] block mt-1">Başarıyla Alındı.</span>
         </h2>
       </motion.div>
 
@@ -2907,62 +2902,58 @@ function SuccessView({ onReset }: { onReset: () => void }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="space-y-6"
+        className="max-w-2xl mx-auto space-y-3 md:space-y-4 text-sm md:text-base text-[#8A9A98] font-medium leading-relaxed px-4"
       >
-        <p className="text-xl md:text-2xl text-[#8A9A98] max-w-2xl mx-auto font-medium leading-relaxed">
-          Başvurun en kısa zamanda Net Oynar ekibi tarafından değerlendirilecek ve seninle iletişime geçilecek.
+        <p>
+          Değerlendirme süreci sonunda vitrin için uygun bulunan oyuncularla doğrudan iletişime geçilerek videoları paylaşılacaktır.
         </p>
-      </motion.div>
-
-      {/* Kritik Uyarı Bölümü */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-2xl mx-auto"
-      >
-        <div className="relative group p-8 rounded-[2rem] bg-red-500/5 border border-red-500/20 shadow-[0_20px_50px_rgba(239,68,68,0.1)] overflow-hidden">
-          {/* Arka Plan Dekoru */}
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-red-500/10 blur-[80px] rounded-full pointer-events-none" />
-          
-          <div className="relative z-10 space-y-4">
-            <div className="flex items-center justify-center gap-3 text-red-400">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-              </svg>
-              <span className="text-sm font-black uppercase tracking-[0.2em]">Önemli Uyarı</span>
+        <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 inline-block mx-auto mt-2">
+          <p className="text-[#C1FF00]/80 text-[13px] md:text-sm font-bold">
+            Yoğun başvuru nedeniyle yalnızca başvurusu onaylanan oyuncularla iletişime geçilmektedir.
+          </p>
+        </div>
+        <div className="pt-2 md:pt-4 w-full">
+          <div className="relative p-4 sm:p-6 rounded-3xl bg-gradient-to-br from-amber-500/20 to-amber-900/10 border border-amber-500/30 w-full text-left shadow-[0_10px_40px_rgba(245,158,11,0.2)] overflow-hidden group">
+            <div className="absolute inset-0 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors duration-500" />
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/20 blur-[50px] rounded-full pointer-events-none" />
+            <div className="relative z-10 flex flex-col gap-2">
+              <h4 className="text-amber-500 font-black uppercase tracking-widest text-[11px] sm:text-xs flex items-center gap-2 drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="animate-pulse">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Önemli
+              </h4>
+              <p className="text-white/90 text-[13px] sm:text-sm font-medium leading-relaxed">
+                Net Oynar scouting sürecinde <span className="text-amber-400 font-black">sosyal medya hesaplarımızı takip etmeyen</span> oyuncuların başvuruları kesinlikle incelemeye alınmayacaktır. Hesabımızı takip edin!
+              </p>
             </div>
-            <p className="text-lg md:text-xl text-white font-bold leading-relaxed italic">
-              "Sosyal medya hesaplarımızı takip etmediğiniz takdirde başvurunuz <span className="text-red-400 underline decoration-red-400/30 underline-offset-4">incelemeye alınmayacaktır.</span>"
-            </p>
           </div>
         </div>
       </motion.div>
 
-      {/* Sosyal Medya Kartları */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="space-y-8"
+        className="pb-2"
       >
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+        <div className="flex flex-row items-center justify-center gap-4 px-2">
           {/* Instagram */}
           <motion.a
             href={socialLinks.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05, y: -5 }}
+            whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-48 group relative p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#833AB4]/50 hover:bg-[#833AB4]/5 transition-all duration-300"
+            className="w-[30%] sm:w-36 group relative p-3 md:p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#833AB4]/50 hover:bg-[#833AB4]/5 transition-all duration-300"
           >
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] shadow-lg">
-                <InstagramIcon className="w-8 h-8 text-white" />
+            <div className="flex flex-col items-center gap-2 md:gap-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] shadow-lg">
+                <InstagramIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div className="text-center">
-                <span className="block text-xs font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Takip Et</span>
-                <span className="block text-sm font-bold text-white/80 group-hover:text-white mt-1">Instagram</span>
+                <span className="block text-[8px] md:text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Takip Et</span>
+                <span className="block text-[10px] md:text-xs font-bold text-white/80 group-hover:text-white mt-0.5">Instagram</span>
               </div>
             </div>
           </motion.a>
@@ -2972,17 +2963,17 @@ function SuccessView({ onReset }: { onReset: () => void }) {
             href={socialLinks.tiktok}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05, y: -5 }}
+            whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-48 group relative p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/50 hover:bg-white/5 transition-all duration-300"
+            className="w-[30%] sm:w-36 group relative p-3 md:p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/50 hover:bg-white/5 transition-all duration-300"
           >
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-[4.25rem] h-[4.25rem] flex items-center justify-center rounded-2xl bg-[#000000] shadow-lg">
-                <TikTokIcon className="w-9 h-9 text-white" />
+            <div className="flex flex-col items-center gap-2 md:gap-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-[#000000] shadow-lg">
+                <TikTokIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div className="text-center">
-                <span className="block text-xs font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Takip Et</span>
-                <span className="block text-sm font-bold text-white/80 group-hover:text-white mt-1">TikTok</span>
+                <span className="block text-[8px] md:text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Takip Et</span>
+                <span className="block text-[10px] md:text-xs font-bold text-white/80 group-hover:text-white mt-0.5">TikTok</span>
               </div>
             </div>
           </motion.a>
@@ -2992,17 +2983,17 @@ function SuccessView({ onReset }: { onReset: () => void }) {
             href={socialLinks.youtube}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05, y: -5 }}
+            whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-48 group relative p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#FF0000]/50 hover:bg-[#FF0000]/5 transition-all duration-300"
+            className="w-[30%] sm:w-36 group relative p-3 md:p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#FF0000]/50 hover:bg-[#FF0000]/5 transition-all duration-300"
           >
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-[#FF0000] shadow-lg">
-                <YouTubeIcon className="w-8 h-8 text-white" />
+            <div className="flex flex-col items-center gap-2 md:gap-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-[#FF0000] shadow-lg">
+                <YouTubeIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div className="text-center">
-                <span className="block text-xs font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Abone Ol</span>
-                <span className="block text-sm font-bold text-white/80 group-hover:text-white mt-1">YouTube</span>
+                <span className="block text-[8px] md:text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Abone Ol</span>
+                <span className="block text-[10px] md:text-xs font-bold text-white/80 group-hover:text-white mt-0.5">YouTube</span>
               </div>
             </div>
           </motion.a>
@@ -3013,16 +3004,16 @@ function SuccessView({ onReset }: { onReset: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8 }}
-        className="pt-6"
+        className="pt-2"
       >
-        <button 
-          onClick={onReset} 
-          className="group flex items-center gap-3 mx-auto px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-[#C1FF00] hover:border-[#C1FF00]/30 transition-all duration-300"
+        <button
+          onClick={onReset}
+          className="group flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[13px] md:text-sm text-white/40 hover:text-[#C1FF00] hover:border-[#C1FF00]/30 transition-all duration-300"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Ana Sayfaya Dön</span>
+          <span className="font-bold text-[11px] md:text-[12px] uppercase tracking-wider">Ana Sayfaya Dön</span>
         </button>
       </motion.div>
     </div>

@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: 'Net Oynar',
     images: [
       {
-        url: '/logo.jpg',
+        url: '/logo.png',
         width: 1200,
         height: 630,
         alt: 'Net Oynar - Dijital Scouting Platformu',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Net Oynar - Saha Senin, Vitrin Bizim",
     description: "Yeteneklerin karanlıkta kalmasın. Videonu yükle, Net Oynar ekibimiz seni vitrine çıkartsın.",
-    images: ['/logo.jpg'],
+    images: ['/logo.png'],
   },
   robots: {
     index: true,
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/logo.jpg',
-    shortcut: '/logo.jpg',
-    apple: '/logo.jpg',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
 };
 

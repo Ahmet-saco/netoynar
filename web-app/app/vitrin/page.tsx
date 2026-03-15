@@ -143,10 +143,10 @@ function PlayerCardComponent({ player, index, onShowBio, onShowTransfer }: { pla
         {/* Instagram Butonu - Her zaman kartın içinde, mobilde daha küçük */}
         {player.instagram && (
           <a href={`https://instagram.com/${player.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer"
-            className="absolute top-3 right-3 sm:top-5 sm:right-5 flex-shrink-0 flex items-center justify-center w-6 h-6 sm:w-10 sm:h-10 rounded-md sm:rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] transition-all duration-300 group z-50 hover:scale-110 active:scale-95 border border-white/40"
+            className="absolute top-3 right-3 sm:top-5 sm:right-5 flex-shrink-0 flex items-center justify-center w-[18px] h-[18px] sm:w-10 sm:h-10 rounded-[5px] sm:rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] transition-all duration-300 group z-50 hover:scale-110 active:scale-95 border border-white/40"
             style={{ transform: 'translateZ(20px)' }}
           >
-            <svg viewBox="0 0 24 24" fill="none" className="w-3 h-3 sm:w-6 sm:h-6 text-white group-hover:scale-110 transition-transform duration-300">
+            <svg viewBox="0 0 24 24" fill="none" className="w-[10px] h-[10px] sm:w-6 sm:h-6 text-white group-hover:scale-110 transition-transform duration-300">
               <path
                 d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
                 fill="currentColor"
@@ -161,17 +161,17 @@ function PlayerCardComponent({ player, index, onShowBio, onShowTransfer }: { pla
               <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-xl font-black tracking-tight leading-tight text-white truncate pr-7 sm:pr-9">{player.fullName}</h3>
               <div className="flex flex-col gap-0.5 mt-1">
-                <div className="flex items-center gap-1.5 w-full overflow-hidden">
+                <div className={`flex items-center gap-1.5 w-full overflow-hidden sm:text-[12px] ${player.team ? (player.team.length > 20 ? 'text-[7px]' : player.team.length > 14 ? 'text-[8.5px]' : 'text-[10px]') : (player.city.length > 12 ? 'text-[8px]' : 'text-[10px]')}`}>
                   {player.team && (
                     <span 
-                      className={`text-white/45 font-bold whitespace-nowrap sm:text-[12px] ${player.team.length > 20 ? 'text-[7px]' : player.team.length > 14 ? 'text-[8.5px]' : 'text-[10px]'}`}
+                      className="text-white/45 font-bold whitespace-nowrap"
                     >
                       {player.team}
                     </span>
                   )}
-                  {player.team && player.city && <span className="text-white/20 text-[8px] sm:text-[10px] flex-shrink-0">·</span>}
+                  {player.team && player.city && <span className="text-white/20 flex-shrink-0">·</span>}
                   <span 
-                    className={`text-white/35 font-medium whitespace-nowrap sm:text-[12px] ${player.city.length > 12 ? 'text-[8px]' : 'text-[10px]'}`}
+                    className="text-white/35 font-medium whitespace-nowrap"
                   >
                     {player.city}
                   </span>
@@ -467,7 +467,7 @@ function VitrinHeroVisual({ count }: { count: number }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.5 }}
-          className="text-[#C1FF00] font-black tracking-[0.4em] uppercase text-[10px] lg:text-xs mt-1 lg:mt-2 opacity-80"
+          className="text-[#00F5FF] font-black tracking-[0.4em] uppercase text-[10px] lg:text-xs mt-1 lg:mt-2 opacity-80"
         >
           Seçkin Oyuncu
         </motion.p>
@@ -480,16 +480,16 @@ function VitrinHeroVisual({ count }: { count: number }) {
 function HeroBanner({ count }: { count: number }) {
   return (
     <div className="relative overflow-hidden flex-grow flex flex-col will-change-transform">
-      <div className="grid lg:grid-cols-2 gap-0 lg:gap-8 items-center py-4 lg:py-0 flex-grow">
-        {/* Sağ Görsel Alanı - Mobilde Üstte */}
-        <div className="order-1 lg:order-2 relative flex justify-center items-center h-full min-h-[320px] lg:min-h-[420px] lg:-translate-y-2 lg:translate-x-16 -translate-y-12">
-          <div className="relative w-[75vw] sm:w-full max-w-[260px] sm:max-w-md lg:max-w-lg aspect-square">
+      <div className="flex flex-col justify-center lg:grid lg:grid-cols-2 lg:gap-8 items-center py-4 lg:py-0 flex-grow h-full -mt-20 lg:mt-0">
+        {/* Sağ Görsel Alanı - SADECE DESKTOP */}
+        <div className="hidden lg:flex order-1 lg:order-2 relative justify-center items-center h-full min-h-[420px] lg:-translate-y-2 lg:translate-x-16">
+          <div className="relative w-full max-w-lg aspect-square">
             <VitrinHeroVisual count={count} />
           </div>
         </div>
 
-        {/* Sol İçerik - Mobilde Altta */}
-        <div className="order-2 lg:order-1 space-y-8 lg:mt-6 -mt-44 lg:mt-0 relative z-10 flex flex-col items-center lg:items-start">
+        {/* Sol İçerik - Mobilde Ortalı */}
+        <div className="order-2 lg:order-1 space-y-6 lg:space-y-8 relative z-10 flex flex-col items-center lg:items-start w-full">
           <motion.div
             variants={{ initial: { opacity: 0, x: 20 }, animate: { opacity: 1, x: 0 } }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -511,9 +511,9 @@ function HeroBanner({ count }: { count: number }) {
           <motion.p
             variants={{ initial: { opacity: 0, x: 20 }, animate: { opacity: 1, x: 0 } }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:block text-xl text-[#8A9A98] max-w-lg leading-relaxed font-medium border-l border-white/10 pl-5 -ml-5"
+            className="text-sm sm:text-xl text-[#8A9A98] max-w-[280px] sm:max-w-md lg:max-w-lg leading-relaxed font-medium lg:border-l lg:border-white/10 lg:pl-5 lg:-ml-5 text-center lg:text-left"
           >
-            Scout ekibimiz tarafından titizlikle incelenmiş ve onaylanmış yetenekler. Türkiye&apos;nin gelecekteki yıldızlarını keşfedin.
+            Scout ekibimiz tarafından titizlikle incelenmiş ve onaylanmış yetenekler. Türkiye'nin gelecekteki yıldızlarını keşfedin.
           </motion.p>
 
           <div className="hidden lg:flex gap-6 pt-4">
@@ -659,9 +659,21 @@ export default function VitrinPage() {
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @media (min-width: 1024px) {
+          .desktop-scrollbar::-webkit-scrollbar { width: 8px; }
+          .desktop-scrollbar::-webkit-scrollbar-track { background: rgba(5, 26, 24, 0.5); }
+          .desktop-scrollbar::-webkit-scrollbar-thumb { background: rgba(193, 255, 0, 0.15); border-radius: 10px; }
+          .desktop-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(193, 255, 0, 0.4); }
+          .desktop-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(193, 255, 0, 0.15) transparent; }
+        }
+        @media (max-width: 1023px) {
+          .desktop-scrollbar::-webkit-scrollbar { display: none; }
+          .desktop-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        }
       `}</style>
 
-      <main className="relative z-10 h-screen overflow-y-auto overflow-x-hidden snap-y snap-mandatory scroll-smooth no-scrollbar will-change-scroll">
+      <main className="relative z-10 h-screen overflow-y-auto overflow-x-hidden scroll-smooth desktop-scrollbar will-change-scroll">
         <motion.div
           initial="initial"
           animate="animate"
@@ -671,7 +683,7 @@ export default function VitrinPage() {
           }}
           className="will-change-transform transform-gpu"
         >
-          <section className="min-h-screen snap-start flex flex-col pt-4 pb-12 overflow-hidden relative">
+          <section className="min-h-screen flex flex-col pt-4 pb-12 overflow-hidden relative">
             <div className="container mx-auto px-4 sm:px-6 flex flex-col h-full flex-grow">
               <header className="py-6 flex items-center justify-between bg-transparent border-none shadow-none">
                 <div className="flex items-center gap-3 md:gap-6">
@@ -704,12 +716,12 @@ export default function VitrinPage() {
             </div>
           </section>
 
-          <section id="vitrin-content" className="min-h-screen snap-start pt-32 pb-20 bg-gradient-to-b from-transparent to-[#051A18]/50">
+          <section id="vitrin-content" className="min-h-screen pt-32 pb-20 bg-gradient-to-b from-transparent to-[#051A18]/50">
             <div className="container mx-auto px-4 sm:px-6 relative">
-              <div className="relative flex items-center justify-end mb-20 h-24">
+              <div className="relative flex items-start md:items-center justify-between mb-8 md:mb-20 min-h-[4rem] md:h-24 z-40">
 
-                {/* Restored Step 157 Filter UI Style */}
-                <div className="absolute left-0 right-0 md:right-20 flex items-center z-40 h-full">
+                {/* Başlık ve Modal Kapsayıcı */}
+                <div className="flex-1 w-[calc(100%-60px)] md:w-auto relative z-40">
                   <AnimatePresence mode="wait">
                     {!isFilterOpen ? (
                       <motion.div
@@ -718,40 +730,33 @@ export default function VitrinPage() {
                         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                         exit={{ opacity: 0, y: -10, filter: 'blur(10px)' }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="flex flex-col gap-2 -translate-y-4 md:translate-y-0"
+                        className="flex flex-col gap-1.5 md:gap-2 pt-1 md:pt-0"
                       >
-                        <div className="flex items-center gap-3"><span className="w-1.5 h-6 bg-[#C1FF00] rounded-full" /><h2 className="text-sm font-black uppercase tracking-[0.3em] text-[#C1FF00]">Yetenek Havuzu</h2></div>
-                        <h3 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Geleceğin <span className="text-white/20">Yıldızları</span></h3>
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <span className="w-1.5 h-5 md:h-6 bg-[#C1FF00] rounded-full" />
+                          <h2 className="text-[10px] md:text-sm font-black uppercase tracking-[0.3em] text-[#C1FF00]">Yetenek Havuzu</h2>
+                        </div>
+                        <h3 className="text-2xl sm:text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white pr-4">
+                          Geleceğin <span className="text-white/20">Yıldızları</span>
+                        </h3>
                       </motion.div>
                     ) : (
                       <div className="w-full flex items-center h-full">
                         <motion.div
                           key="filters"
-                          initial={{
-                            height: 0,
-                            opacity: 0,
-                            y: -20
-                          }}
-                          animate={{
-                            height: 'auto',
-                            opacity: 1,
-                            y: 0
-                          }}
-                          exit={{
-                            height: 0,
-                            opacity: 0,
-                            y: -20
-                          }}
+                          initial={{ height: 0, opacity: 0, y: -20 }}
+                          animate={{ height: 'auto', opacity: 1, y: 0 }}
+                          exit={{ height: 0, opacity: 0, y: -20 }}
                           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                          className="absolute top-[88px] md:top-0 left-0 right-0 z-50 md:relative md:w-full origin-top-right md:origin-top"
+                          className="absolute top-[60px] md:top-0 left-0 right-0 md:right-20 z-50 md:relative md:w-full origin-top-right md:origin-top w-[calc(100vw-32px)] sm:w-full"
                         >
-                          <div className="p-5 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] bg-[#0A1A18]/95 md:bg-white/5 border border-white/10 backdrop-blur-2xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-9 w-full max-w-[1400px]">
-                            <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-9 flex-grow">
+                          <div className="p-5 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] bg-[#0A1A18]/95 md:bg-white/5 border border-white/10 backdrop-blur-2xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-9 w-full max-w-[1400px] max-h-[70vh] md:max-h-none overflow-y-auto md:overflow-visible overscroll-contain">
+                            <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-9 flex-grow">
                               <FilterGroup label="Mevki" options={availablePositions} current={filters.position} onChange={(v: string) => setFilters(f => ({ ...f, position: v }))} />
                               <FilterGroup label="Lig Seviyesi" options={availableLeagues} current={filters.league} onChange={(v: string) => setFilters(f => ({ ...f, league: v }))} />
                               <FilterGroup label="Baskın Ayak" options={availableFeets} current={filters.dominantFoot} onChange={(v: string) => setFilters(f => ({ ...f, dominantFoot: v }))} />
                             </div>
-                            <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-9 w-full md:w-auto">
+                            <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-9 w-full md:w-auto mt-2 md:mt-0">
                               <div className="flex flex-col gap-2 min-w-[140px] border-t border-white/10 pt-5 md:border-0 md:pt-0 w-full md:w-auto">
                                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/20 ml-1 whitespace-nowrap">Boy Aralığı</span>
                                 <div className="flex items-center gap-2">
@@ -759,17 +764,17 @@ export default function VitrinPage() {
                                     let val = e.target.value.replace(/\D/g, '');
                                     if (val.length > 3) val = val.slice(0, 3);
                                     setFilters(f => ({ ...f, minHeight: val }));
-                                  }} className="w-full md:w-16 bg-white/5 border border-white/10 rounded-lg py-1.5 px-3 text-[10px] text-white focus:outline-none focus:border-[#C1FF00]/50 text-center [&::-webkit-inner-spin-button]:appearance-none" />
+                                  }} className="w-full md:w-16 bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-[#C1FF00]/50 text-center [&::-webkit-inner-spin-button]:appearance-none" />
                                   <span className="text-white/20">-</span>
                                   <input type="text" inputMode="numeric" placeholder="Max" value={filters.maxHeight} onChange={e => {
                                     let val = e.target.value.replace(/\D/g, '');
                                     if (val.length > 3) val = val.slice(0, 3);
                                     setFilters(f => ({ ...f, maxHeight: val }));
-                                  }} className="w-full md:w-16 bg-white/5 border border-white/10 rounded-lg py-1.5 px-3 text-[10px] text-white focus:outline-none focus:border-[#C1FF00]/50 text-center [&::-webkit-inner-spin-button]:appearance-none" />
+                                  }} className="w-full md:w-16 bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-[#C1FF00]/50 text-center [&::-webkit-inner-spin-button]:appearance-none" />
                                 </div>
                               </div>
                               
-                              <div className="w-full md:w-auto md:border-l border-white/10 pt-5 md:pt-0 border-t md:border-t-0 mt-2 md:mt-0 md:pl-9 relative z-50">
+                              <div className="w-full md:w-auto md:border-l border-white/10 pt-5 md:pt-0 border-t md:border-t-0 mt-2 md:mt-0 md:pl-9 relative z-50 mb-4 md:mb-0">
                                   <button
                                     onClick={() => setFilters({ position: 'all', dominantFoot: 'all', league: 'all', minHeight: '', maxHeight: '' })}
                                     disabled={!hasActiveFilters}
@@ -793,17 +798,20 @@ export default function VitrinPage() {
                 </div>
 
                 {/* Ultra Minimalist Fixed Filter Toggle */}
-                <button
-                  onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className={`relative z-50 w-16 h-16 rounded-3xl flex flex-col items-center justify-center gap-0.5 transition-all duration-500 flex-shrink-0 ${isFilterOpen ? 'bg-[#C1FF00] shadow-[0_0_40px_rgba(193,255,0,0.4)]' : 'bg-white/[0.03] text-white/70'}`}
-                >
-                  <div className="relative w-5 h-5 flex flex-col items-center justify-center">
-                    <motion.span animate={isFilterOpen ? { rotate: 45, y: 0.5, width: '20px' } : { rotate: 0, y: -4, width: '16px' }} transition={{ duration: 0.4 }} className={`absolute block h-[1.5px] rounded-full transition-colors ${isFilterOpen ? 'bg-black' : 'bg-[#C1FF00]'}`} />
-                    <motion.span animate={isFilterOpen ? { opacity: 0, scale: 0, x: 10 } : { opacity: 1, scale: 1, x: 0 }} transition={{ duration: 0.3 }} className="absolute block h-[1.5px] w-10px rounded-full bg-[#C1FF00] -translate-x-1" style={{ width: '10px' }} />
-                    <motion.span animate={isFilterOpen ? { rotate: -45, y: 0.5, width: '20px' } : { rotate: 0, y: 4, width: '16px' }} transition={{ duration: 0.4 }} className={`absolute block h-[1.5px] rounded-full transition-colors ${isFilterOpen ? 'bg-black' : 'bg-[#C1FF00]'}`} />
-                  </div>
-                  {!isFilterOpen && <span className="text-[7px] font-black uppercase tracking-[0.2em] text-white/20 mt-0.5">Filtre</span>}
-                </button>
+                <div className="absolute top-0 right-0 md:relative md:top-auto md:right-auto z-50 h-full flex flex-col justify-start md:justify-center">
+                  <button
+                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                    className={`relative z-50 flex flex-col items-center justify-center gap-0.5 transition-all duration-500 flex-shrink-0 
+                      w-[44px] h-[44px] rounded-[14px] md:w-16 md:h-16 md:rounded-3xl 
+                      ${isFilterOpen ? 'bg-[#C1FF00] shadow-[0_0_20px_rgba(193,255,0,0.4)] md:shadow-[0_0_40px_rgba(193,255,0,0.4)]' : 'bg-white/[0.03] text-white/70 border border-white/5'}`}
+                  >
+                    <div className="relative w-4 h-4 md:w-5 md:h-5 flex flex-col items-center justify-center">
+                      <motion.span animate={isFilterOpen ? { rotate: 45, y: 0.5, width: '100%' } : { rotate: 0, y: -3, width: '80%' }} transition={{ duration: 0.4 }} className={`absolute block h-[2px] md:h-[1.5px] rounded-full transition-colors ${isFilterOpen ? 'bg-black' : 'bg-[#C1FF00]'}`} />
+                      <motion.span animate={isFilterOpen ? { opacity: 0, scale: 0, x: 10 } : { opacity: 1, scale: 1, x: 0 }} transition={{ duration: 0.3 }} className="absolute block h-[2px] md:h-[1.5px] rounded-full bg-[#C1FF00] -translate-x-[2px] md:-translate-x-1" style={{ width: '50%' }} />
+                      <motion.span animate={isFilterOpen ? { rotate: -45, y: 0.5, width: '100%' } : { rotate: 0, y: 3, width: '80%' }} transition={{ duration: 0.4 }} className={`absolute block h-[2px] md:h-[1.5px] rounded-full transition-colors ${isFilterOpen ? 'bg-black' : 'bg-[#C1FF00]'}`} />
+                    </div>
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">

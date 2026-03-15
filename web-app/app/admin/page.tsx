@@ -586,8 +586,8 @@ export default function AdminPage() {
 
                 return (
                   <motion.div key={sub.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white/[0.03] border border-white/8 rounded-2xl overflow-hidden hover:bg-white/[0.05] transition-colors">
-                    <div className="p-4 sm:p-6 flex items-center gap-6">
-                      <div className="flex-1 min-w-0">
+                    <div className="p-4 sm:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+                      <div className="flex-1 min-w-0 w-full">
                         <div className="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-4">
                           <span className="font-black text-white text-base md:text-lg truncate">{sub.fullName}</span>
                           {sub.status === 'approved' ? (
@@ -596,30 +596,30 @@ export default function AdminPage() {
                             <span className="inline-flex w-fit text-[#FFB800] text-[8px] md:text-[10px] font-black uppercase tracking-widest px-2 py-0.5 bg-[#FFB800]/10 rounded-full border border-[#FFB800]/20">İnceleme Bekliyor</span>
                           )}
                         </div>
-                        <div className="hidden md:flex items-center gap-5 mt-2 overflow-x-auto no-scrollbar">
-                          <div className="flex flex-col">
+                        <div className="flex items-center gap-4 md:gap-5 mt-3 md:mt-2 overflow-x-auto no-scrollbar w-full pb-1 md:pb-0">
+                          <div className="flex flex-col flex-shrink-0">
                             <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Pozisyon</span>
                             <span className="text-xs text-white/70 font-bold">{sub.position}</span>
                           </div>
-                          <div className="w-px h-6 bg-white/5" />
-                          <div className="flex flex-col">
+                          <div className="w-px h-6 bg-white/5 flex-shrink-0" />
+                          <div className="flex flex-col flex-shrink-0">
                             <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Yaş</span>
                             <span className="text-xs text-white/70 font-bold">{getPlayerAge(sub)}</span>
                           </div>
-                          <div className="w-px h-6 bg-white/5" />
-                          <div className="flex flex-col">
+                          <div className="w-px h-6 bg-white/5 flex-shrink-0" />
+                          <div className="flex flex-col flex-shrink-0">
                             <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Şehir</span>
                             <span className="text-xs text-white/70 font-bold">{sub.city}</span>
                           </div>
-                          <div className="w-px h-6 bg-white/5" />
-                          <div className="flex flex-col">
+                          <div className="w-px h-6 bg-white/5 flex-shrink-0" />
+                          <div className="flex flex-col flex-shrink-0 pr-4 md:pr-0">
                             <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Takım</span>
                             <span className="text-xs text-white/70 font-bold">{sub.team || '-'}</span>
                           </div>
                         </div>
                       </div>
                         {/* Aksiyon Butonları */}
-                         <div className="flex items-center gap-2">
+                         <div className="flex flex-wrap items-center gap-2 mt-2 md:mt-0 w-full md:w-auto">
                            <button 
                              onClick={() => openEditModal(sub)}
                              className="px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-400 text-xs font-black hover:bg-blue-500 hover:text-white transition-all"
