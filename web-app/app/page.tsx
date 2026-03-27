@@ -976,8 +976,8 @@ function Header({ active, onChangeScene }: { active: SceneId; onChangeScene: (s:
                   key={item.id}
                   onClick={() => { onChangeScene(item.id); setMobileOpen(false); }}
                   className={`text-left px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition-all ${active === item.id
-                      ? 'text-[#C1FF00] bg-[#C1FF00]/8'
-                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                    ? 'text-[#C1FF00] bg-[#C1FF00]/8'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
                     }`}
                 >
                   {item.label}
@@ -1714,8 +1714,8 @@ function ApplyForm({
                                 setFormData(prev => ({ ...prev, uCategory: uc }));
                               }}
                               className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border ${formData.uCategory === uc
-                                  ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
-                                  : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
+                                ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
+                                : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
                                 }`}
                             >
                               {uc}
@@ -1736,8 +1736,8 @@ function ApplyForm({
                             type="button"
                             onClick={() => toggleMainPosition(pos)}
                             className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all ${formData.positions.includes(pos)
-                                ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00]'
-                                : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'
+                              ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00]'
+                              : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'
                               }`}
                           >
                             {pos}
@@ -1764,8 +1764,8 @@ function ApplyForm({
                                   type="button"
                                   onClick={() => toggleSubPosition(sub)}
                                   className={`py-2.5 px-4 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all flex items-center justify-between ${formData.subPositions.includes(sub)
-                                      ? 'bg-[#C1FF00]/10 text-[#C1FF00] border-[#C1FF00]/40'
-                                      : 'bg-white/5 text-white/30 border-white/10 hover:border-white/20'
+                                    ? 'bg-[#C1FF00]/10 text-[#C1FF00] border-[#C1FF00]/40'
+                                    : 'bg-white/5 text-white/30 border-white/10 hover:border-white/20'
                                     }`}
                                 >
                                   {sub}
@@ -1798,8 +1798,8 @@ function ApplyForm({
                             type="button"
                             onClick={() => toggleNationalTeam(team)}
                             className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-wider border transition-all ${formData.nationalTeam.includes(team)
-                                ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
-                                : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
+                              ? 'bg-[#C1FF00] text-[#051A18] border-[#C1FF00] shadow-[0_0_15px_rgba(193,255,0,0.2)]'
+                              : 'bg-white/5 text-white/40 border-white/5 hover:border-white/20'
                               }`}
                           >
                             {team}
@@ -2616,8 +2616,8 @@ function FormDateInput({ label, name, value, onChange, min, max }: any) {
                       type="button"
                       onClick={() => handleDateSelect(day)}
                       className={`h-9 w-9 rounded-xl text-xs font-black transition-all flex items-center justify-center ${isSelected
-                          ? 'bg-[#C1FF00] text-[#051A18] shadow-[0_0_15px_rgba(193,255,0,0.3)] scale-110'
-                          : 'text-white/60 hover:bg-[#C1FF00]/10 hover:text-[#C1FF00]'
+                        ? 'bg-[#C1FF00] text-[#051A18] shadow-[0_0_15px_rgba(193,255,0,0.3)] scale-110'
+                        : 'text-white/60 hover:bg-[#C1FF00]/10 hover:text-[#C1FF00]'
                         }`}
                     >
                       {day}
@@ -2719,8 +2719,8 @@ function FormSelect({ label, options, name, value, onChange }: any) {
                     type="button"
                     onClick={() => handleSelect(option)}
                     className={`w-full text-left px-4 py-3.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${value === option
-                        ? 'bg-[#C1FF00] text-[#051A18]'
-                        : 'text-white/70 hover:bg-white/5 hover:text-white'
+                      ? 'bg-[#C1FF00] text-[#051A18]'
+                      : 'text-white/70 hover:bg-white/5 hover:text-white'
                       }`}
                   >
                     <span className="uppercase tracking-wide">{option}</span>
@@ -3020,7 +3020,7 @@ function SuccessView({ onReset }: { onReset: () => void }) {
   );
 }
 
-// --- SOCIAL MEDIA LINKS ---
+// --- Sosyal Medya Linkleri ---
 function SocialMediaLinks() {
   const socialLinks = {
     instagram: 'https://www.instagram.com/netoynar?igsh=MWU4ems3NHFua2hhcA==',
