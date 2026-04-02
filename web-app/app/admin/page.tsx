@@ -449,9 +449,9 @@ export default function AdminPage() {
     // Arama filtresi
     const matchesSearch = searchTerm === '' 
       ? true 
-      : s.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.team.toLowerCase().includes(searchTerm.toLowerCase());
+      : (s.fullName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (s.city?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (s.team?.toLowerCase() || '').includes(searchTerm.toLowerCase());
         
     return matchesStatus && matchesSearch;
   });

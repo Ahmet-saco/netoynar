@@ -89,7 +89,7 @@ function getPlayerAge(player: any) {
 /* ─── Zengin ve Modern Oyuncu Kartı (Step 163 Style) ─── */
 function PlayerCardComponent({ player, index, onShowBio, onShowTransfer }: { player: Player; index: number; onShowBio: (p: Player) => void; onShowTransfer: (p: Player) => void }) {
   const cfg = useMemo(() => {
-    const pos = player.position.toLowerCase();
+    const pos = (player.position || '').toLowerCase();
     if (pos.includes('kaleci')) return POS_CONFIG['Kaleci'];
     if (pos.includes('stoper') || pos.includes('bek') || pos.includes('defans')) return POS_CONFIG['Defans'];
     if (pos.includes('numara') || pos.includes('orta saha')) return POS_CONFIG['Orta Saha'];
@@ -613,7 +613,7 @@ export default function VitrinPage() {
   const filtered = useMemo(() => players.filter(p => {
     let matchPos = filters.position === 'all';
     if (!matchPos) {
-      const pos = p.position.toLowerCase();
+      const pos = (p.position || '').toLowerCase();
       if (filters.position === 'Kaleci') matchPos = pos.includes('kaleci');
       else if (filters.position === 'Defans') matchPos = pos.includes('stoper') || pos.includes('defans');
       else if (filters.position === 'Bek') matchPos = pos.includes('bek');

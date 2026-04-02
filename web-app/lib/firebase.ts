@@ -12,23 +12,21 @@ const firebaseConfig = {
 };
 
 // Validate Firebase config
-if (typeof window !== 'undefined') {
-  const requiredKeys = [
-    'NEXT_PUBLIC_FIREBASE_API_KEY',
-    'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
-    'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
-  ];
+  const configCheck = {
+    API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  };
   
-  const missingKeys = requiredKeys.filter(key => !process.env[key]);
+  const missingKeys = Object.entries(configCheck)
+    .filter(([, value]) => !value)
+    .map(([key]) => `NEXT_PUBLIC_FIREBASE_${key}`);
+
   if (missingKeys.length > 0) {
     console.error('Missing Firebase environment variables:', missingKeys);
   } else {
-    console.log('Firebase config loaded:', {
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    });
+    console.log('Firebase config loaded successfully.');
   }
-}
 
 // Initialize Firebase
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
