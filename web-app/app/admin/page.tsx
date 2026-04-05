@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   collection,
@@ -26,6 +26,7 @@ interface Submission {
   driveVideoLink?: string;
   driveFolderLink?: string;
   videoStoragePath: string;
+  thumbnailStoragePath?: string;
   height?: number;
   weight?: number;
   goals?: number;
@@ -122,12 +123,8 @@ export default function AdminPage() {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferData, setTransferData] = useState({ id: '', oldTeam: '', newTeam: '', oldTeamLeague: '', newTeamLeague: '' });
 
-  // Video Modal State'leri
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [videoModalUrl, setVideoModalUrl] = useState('');
-  const [videoModalName, setVideoModalName] = useState('');
+  // Video Kontrol State'leri
   const [videoLoadingId, setVideoLoadingId] = useState<string | null>(null);
-  const [videoUrls, setVideoUrls] = useState<Record<string, string>>({});
 
   const fetchSignedUrl = async (storagePath: string): Promise<string | null> => {
     try {
@@ -148,16 +145,11 @@ export default function AdminPage() {
     if (!sub.videoStoragePath) return;
     setVideoLoadingId(sub.id);
     try {
-      let url = videoUrls[sub.id];
-      if (!url) {
-        const fetched = await fetchSignedUrl(sub.videoStoragePath);
-        if (!fetched) throw new Error('URL alınamadı');
-        url = fetched;
-        setVideoUrls(prev => ({ ...prev, [sub.id]: url }));
-      }
-      setVideoModalUrl(url);
-      setVideoModalName(sub.fullName);
-      setIsVideoModalOpen(true);
+      const url = await fetchSignedUrl(sub.videoStoragePath);
+      if (!url) throw new Error('URL alınamadı');
+      
+      // Videoyu yeni sekmede aç
+      window.open(url, '_blank');
     } catch (error: any) {
       console.error('Video error:', error);
       alert('Video açılamadı: ' + (error.message || 'Bilinmeyen hata'));
@@ -165,6 +157,8 @@ export default function AdminPage() {
       setVideoLoadingId(null);
     }
   };
+
+
 
   // Şifre doğrulama
   const handleLogin = async (e: React.FormEvent) => {
@@ -246,21 +240,7 @@ export default function AdminPage() {
     return () => unsubscribe();
   }, [isAuthenticated]);
 
-  // Submissions yüklenince video URL'lerini ön-çek (thumbnail için)
-  useEffect(() => {
-    if (submissions.length === 0 || !adminToken) return;
-    const fetchAll = async () => {
-      const toFetch = submissions.filter(s => s.videoStoragePath && !videoUrls[s.id]);
-      await Promise.allSettled(
-        toFetch.map(async (s) => {
-          const url = await fetchSignedUrl(s.videoStoragePath);
-          if (url) setVideoUrls(prev => ({ ...prev, [s.id]: url }));
-        })
-      );
-    };
-    fetchAll();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submissions, adminToken]);
+  // Eski toplu fetch useEffect'i silindi (Performans için lazy loading'e geçildi)
 
   // Yeni Professional API Tabanlı Onay/Red İşlemi
   const handleReview = useCallback(async (submissionId: string, status: 'approved' | 'rejected') => {
@@ -631,51 +611,32 @@ export default function AdminPage() {
             ) : (
               filtered.map((sub, index) => {
                 const isLoading = loadingIds.has(sub.id);
-                const isVideoLoading = videoLoadingId === sub.id;
-                const cachedUrl = videoUrls[sub.id];
+                const isVideoProcessing = videoLoadingId === sub.id;
 
                 return (
                   <motion.div key={sub.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white/[0.03] border border-white/8 rounded-2xl overflow-hidden hover:bg-white/[0.05] transition-colors">
                     <div className="p-4 sm:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
                       
-                      {/* Video Thumbnail */}
+                      {/* Video Butonu (Statik & Temiz) */}
                       {sub.videoStoragePath && (
                         <button
                           onClick={() => handleViewVideo(sub)}
-                          disabled={isVideoLoading}
-                          className="relative flex-shrink-0 w-24 h-16 md:w-32 md:h-20 rounded-xl overflow-hidden group bg-black/40 border border-white/10 cursor-pointer"
-                          title="Videoyu İzle"
+                          disabled={videoLoadingId === sub.id}
+                          className="relative flex-shrink-0 w-24 h-16 md:w-32 md:h-20 rounded-xl overflow-hidden group bg-[#C1FF00]/5 border border-[#C1FF00]/10 cursor-pointer flex flex-col items-center justify-center transition-all hover:bg-[#C1FF00]/10"
+                          title="Videoyu Yeni Sekmede Aç"
                         >
-                          {cachedUrl ? (
-                            <video
-                              src={`${cachedUrl}#t=0.001`}
-                              preload="metadata"
-                              muted
-                              playsInline
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5">
-                                <rect x="2" y="2" width="20" height="20" rx="3" />
-                                <polygon points="10,8 16,12 10,16" fill="rgba(255,255,255,0.3)" stroke="none" />
-                              </svg>
-                            </div>
-                          )}
-                          {/* Play overlay */}
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            {isVideoLoading ? (
-                              <div className="w-6 h-6 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                          <div className="flex flex-col items-center gap-1.5">
+                            {videoLoadingId === sub.id ? (
+                               <div className="w-5 h-5 border-2 border-[#C1FF00]/20 border-t-[#C1FF00] rounded-full animate-spin" />
                             ) : (
-                              <div className="w-8 h-8 rounded-full bg-[#C1FF00] flex items-center justify-center shadow-lg">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="#000">
-                                  <polygon points="5,3 19,12 5,21" />
+                              <>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C1FF00" strokeWidth="1.5" className="opacity-60 group-hover:scale-110 transition-transform">
+                                  <rect x="2" y="2" width="20" height="20" rx="4" />
+                                  <path d="M10 9l5 3-5 3V9z" fill="currentColor" opacity="0.4" />
                                 </svg>
-                              </div>
+                                <span className="text-[7px] font-black uppercase tracking-widest text-[#C1FF00]/60">VİDEOYU AÇ</span>
+                              </>
                             )}
-                          </div>
-                          <div className="absolute bottom-1 left-1 right-1 flex items-center justify-center">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-white/60 bg-black/60 px-1.5 py-0.5 rounded-full">Video</span>
                           </div>
                         </button>
                       )}
@@ -755,71 +716,6 @@ export default function AdminPage() {
           </AnimatePresence>
         </div>
       </main>
-
-      {/* VİDEO OYNATICI MODALI */}
-      <AnimatePresence>
-        {isVideoModalOpen && videoModalUrl && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => { setIsVideoModalOpen(false); setVideoModalUrl(''); }}
-              className="absolute inset-0 bg-black/90 backdrop-blur-md"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="relative w-full max-w-4xl bg-[#080f0e] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
-            >
-              {/* Header */}
-              <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Başvuru Videosu</p>
-                  <h2 className="text-lg font-black uppercase tracking-tight text-white">{videoModalName}</h2>
-                </div>
-                <div className="flex items-center gap-3">
-                  <a
-                    href={videoModalUrl}
-                    download
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/60 hover:bg-white/10 hover:text-white transition-all flex items-center gap-2"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    İndir
-                  </a>
-                  <button
-                    onClick={() => { setIsVideoModalOpen(false); setVideoModalUrl(''); }}
-                    className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-              {/* Video Player */}
-              <div className="relative bg-black" style={{ aspectRatio: '16/9' }}>
-                <video
-                  src={videoModalUrl}
-                  controls
-                  autoPlay
-                  playsInline
-                  className="w-full h-full object-contain"
-                  style={{ maxHeight: '70vh' }}
-                >
-                  Tarayıcınız video etiketini desteklemiyor.
-                </video>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* DÜZENLEME MODALI */}
       <AnimatePresence>
@@ -1155,3 +1051,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+

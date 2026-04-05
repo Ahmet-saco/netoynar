@@ -1118,6 +1118,7 @@ function ApplyForm({
   const [timeRemaining, setTimeRemaining] = useState<number>(0); // seconds
   const [isUploading, setIsUploading] = useState(false);
   const [videoStoragePath, setVideoStoragePath] = useState<string | null>(null);
+  const [thumbnailStoragePath, setThumbnailStoragePath] = useState<string | null>(null);
 
   const toggleMainPosition = (pos: string) => {
     setFormData(prev => {
@@ -1209,9 +1210,12 @@ function ApplyForm({
     setUploadSpeed(0);
     setTimeRemaining(0);
     setVideoStoragePath(null);
+    setThumbnailStoragePath(null);
     uploadStartTime.current = Date.now();
     lastProgressTime.current = Date.now();
     lastProgressBytes.current = 0;
+    
+    // Thumbnail yakalama tamamen kaldırıldı (Kullanıcı video indirilmesini/işlenmesini istemedi)
 
     try {
       // 1. Video'yu Firebase Storage'a yükle (İsim ve Timestamp ile)
@@ -1266,9 +1270,10 @@ function ApplyForm({
           setUploadTask(null);
           setVideoStoragePath(null);
         },
-        async () => {
+        () => {
           // Upload completed
-          setVideoStoragePath(task.snapshot.ref.fullPath);
+          const fullPath = task.snapshot.ref.fullPath;
+          setVideoStoragePath(fullPath);
           setIsUploading(false);
           // Keep progress at 100% until form is submitted
         }
@@ -1300,6 +1305,7 @@ function ApplyForm({
     setUploadProgress(0);
     setIsUploading(false);
     setVideoStoragePath(null);
+    setThumbnailStoragePath(null);
     setUploadSpeed(0);
     setTimeRemaining(0);
 
@@ -1350,6 +1356,7 @@ function ApplyForm({
     setIsUploading(false);
     setIsSubmitting(false);
     setVideoStoragePath(null);
+    setThumbnailStoragePath(null);
     setUploadSpeed(0);
     setTimeRemaining(0);
   };
@@ -1364,6 +1371,7 @@ function ApplyForm({
     setIsUploading(false);
     setIsSubmitting(false);
     setVideoStoragePath(null);
+    setThumbnailStoragePath(null);
     setUploadSpeed(0);
     setTimeRemaining(0);
     // Trigger file input after state update
@@ -1512,6 +1520,7 @@ function ApplyForm({
         nationalTeam: formData.nationalTeam.length > 0 ? formData.nationalTeam : null,
         uCategory: (formData.league === 'Gelişim Altyapısı' || formData.league === 'Elit Altyapı') ? formData.uCategory : null,
         videoStoragePath: videoStoragePath,
+        thumbnailStoragePath: thumbnailStoragePath,
         driveVideoLink: null,
         status: 'pending',
         createdAt: serverTimestamp(),
@@ -1523,6 +1532,7 @@ function ApplyForm({
       // Reset form state
       setUploadTask(null);
       setVideoStoragePath(null);
+      setThumbnailStoragePath(null);
       setIsSubmitting(false);
 
       // Direkt success sayfasına git (Cloud Function arka planda çalışacak)
