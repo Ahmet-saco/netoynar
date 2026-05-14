@@ -52,7 +52,7 @@ const FOOT_MAP: Record<string, string> = {
   'Sağ': 'SAĞ', 'Sol': 'SOL', 'Her İkisi': 'İKİ AYAK',
 };
 
-// Dinamik Yaş Hesaplama Fonksiyonu
+// Yaş hesaplama fonksiyonu
 function getPlayerAge(player: any) {
   if (player.birthDate) {
     const birthDate = new Date(player.birthDate);
@@ -64,7 +64,7 @@ function getPlayerAge(player: any) {
     }
     return age;
   }
-  
+
   // Legacy (Eski Kayıt) Mantığı:
   // Kullanıcı "seneye bugün artsın" dediği için, 
   // bugünkü tarihten yaşını çıkartıp hayali bir doğum tarihi gibi davranıyoruz.
@@ -72,17 +72,17 @@ function getPlayerAge(player: any) {
   if (player.age) {
     const legacyBaseDate = new Date('2026-03-12'); // Sistemin kurulduğu tarih (Bugün)
     const today = new Date();
-    
+
     // Yıl farkı (Kaç yıl geçti sistem kurulduğundan beri?)
     let yearsSinceSetup = today.getFullYear() - legacyBaseDate.getFullYear();
     const m = today.getMonth() - legacyBaseDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < legacyBaseDate.getDate())) {
       yearsSinceSetup--;
     }
-    
+
     return player.age + Math.max(0, yearsSinceSetup);
   }
-  
+
   return '-';
 }
 
@@ -160,178 +160,178 @@ function PlayerCardComponent({ player, index, onShowBio, onShowTransfer }: { pla
             <div className="flex items-start justify-between gap-2 relative">
               <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-xl font-black tracking-tight leading-tight text-white truncate pr-7 sm:pr-9">{player.fullName}</h3>
-              <div className="flex flex-col gap-0.5 mt-1">
-                <div className={`flex items-center gap-1.5 w-full overflow-hidden sm:text-[12px] ${player.team ? (player.team.length > 20 ? 'text-[7px]' : player.team.length > 14 ? 'text-[8.5px]' : 'text-[10px]') : (player.city.length > 12 ? 'text-[8px]' : 'text-[10px]')}`}>
-                  {player.team && (
-                    <span 
-                      className="text-white/45 font-bold whitespace-nowrap"
+                <div className="flex flex-col gap-0.5 mt-1">
+                  <div className={`flex items-center gap-1.5 w-full overflow-hidden sm:text-[12px] ${player.team ? (player.team.length > 20 ? 'text-[7px]' : player.team.length > 14 ? 'text-[8.5px]' : 'text-[10px]') : (player.city.length > 12 ? 'text-[8px]' : 'text-[10px]')}`}>
+                    {player.team && (
+                      <span
+                        className="text-white/45 font-bold whitespace-nowrap"
+                      >
+                        {player.team}
+                      </span>
+                    )}
+                    {player.team && player.city && <span className="text-white/20 flex-shrink-0">·</span>}
+                    <span
+                      className="text-white/35 font-medium whitespace-nowrap"
                     >
-                      {player.team}
+                      {player.city}
+                    </span>
+                  </div>
+                  {player.league && (
+                    <div className="flex items-center gap-1.5 mt-0.5 w-full overflow-hidden">
+                      <span className="text-[7.5px] sm:text-[10px] font-black text-[#C1FF00]/60 uppercase tracking-widest whitespace-nowrap flex-shrink-0">
+                        {(() => {
+                          let leagueText = player.league
+                            .replace(/Süper Amatör.*/i, 'SAL')
+                            .replace(/Bölgesel Amatör.*/i, 'BAL')
+                            .replace(/1\. Amatör.*/i, '1. AMATÖR')
+                            .replace(/2\. Amatör.*/i, '2. AMATÖR')
+                            .replace(/Gelişim Altyapısı/i, 'GELİŞİM')
+                            .replace(/Elit Altyapı/i, 'ELİT ALTYAPI');
+
+                          const isAltyapi = leagueText === 'GELİŞİM' || leagueText === 'ELİT ALTYAPI';
+
+                          if (player.uCategory) {
+                            if (isAltyapi) {
+                              return `${player.uCategory} ${leagueText}`;
+                            }
+                            return `${leagueText} · ${player.uCategory}`;
+                          }
+                          return leagueText;
+                        })()}
+                      </span>
+                      <span className="text-[#C1FF00] text-[6px] sm:text-[10px] flex-shrink-0 drop-shadow-[0_0_5px_rgba(193,255,0,0.8)] opacity-60">·</span>
+                      {(() => {
+                        let posText = player.position;
+                        if (/numara/i.test(posText)) {
+                          posText = posText.replace(/numara/gi, '').replace(/\s+/g, ' ').replace(/\s*-\s*$/g, '').trim() + ' NUMARA';
+                        }
+
+                        // Mobilde çok uzun mevkileri kısaltalım
+                        const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+                        if (isMobile) {
+                          posText = posText
+                            .replace(/Kaleci/g, 'KL')
+                            .replace(/Defans/g, 'DEF')
+                            .replace(/Orta Saha/g, 'OS')
+                            .replace(/Forvet/g, 'FV')
+                            .replace(/Kanat/g, 'KNT')
+                            .replace(/Stoper/g, 'STP')
+                            .replace(/Sol Bek/g, 'SLB')
+                            .replace(/Sağ Bek/g, 'SGB')
+                            .replace(/Sol Açık/g, 'SLA')
+                            .replace(/Sağ Açık/g, 'SGA');
+                        }
+
+                        const isVeryLong = posText.length > 18;
+                        const isLong = posText.length > 13;
+
+                        return (
+                          <span
+                            className={`font-black uppercase whitespace-nowrap sm:text-[10px] sm:tracking-widest ${isVeryLong ? 'text-[5.5px] tracking-tight' : isLong ? 'text-[6.5px] tracking-tight' : 'text-[7.5px] tracking-wider'}`}
+                            style={{ color: cfg.color }}
+                          >
+                            {posText}
+                          </span>
+                        );
+                      })()}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* TRANSFER BANNER (EN İYİ REKLAM) */}
+            {player.oldTeam && player.newTeam && (
+              <div className="relative mt-4 group cursor-pointer" onClick={() => onShowTransfer(player)}>
+                {/* Floating Label (TextField style) */}
+                <div className="absolute -top-2 left-1 z-20 bg-[#C1FF00] text-[#0A2E2A] text-[5.5px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(193,255,0,0.4)]">
+                  TRANSFER
+                </div>
+
+                <div
+                  className="relative -mx-3 sm:-mx-5 px-3 sm:px-5 py-3 sm:py-4 bg-gradient-to-r from-[#C1FF00]/20 via-[#C1FF00]/5 to-transparent border-y border-[#C1FF00]/30 flex items-center justify-between gap-1 sm:gap-3 overflow-hidden transition-all duration-300 group-hover:bg-white/[0.04]"
+                >
+                  {/* Parlama Efekti */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C1FF00]/20 to-transparent transform -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C1FF00] shadow-[1px_0_15px_rgba(193,255,0,0.8)]" />
+
+                  <div className="flex flex-1 items-center gap-1 sm:gap-3 overflow-hidden min-w-0 pr-1 sm:pr-2">
+                    <div className="flex flex-1 items-center gap-0.5 sm:gap-2 overflow-hidden min-w-0">
+                      <span className="text-[7.5px] sm:text-[12px] font-bold text-white/50 uppercase tracking-wider sm:tracking-widest truncate">{player.oldTeam}</span>
+                      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#C1FF00" strokeWidth="3" className="flex-shrink-0 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite] sm:w-[14px] sm:h-[14px]"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
+                      <span className="text-[8.5px] sm:text-[14px] font-black text-[#C1FF00] uppercase tracking-wider sm:tracking-widest truncate drop-shadow-[0_0_8px_rgba(193,255,0,0.4)]">{player.newTeam}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex-shrink-0 text-[#C1FF00]/40 group-hover:text-[#C1FF00] group-hover:scale-110 transition-all">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="sm:w-[16px] sm:h-[16px]"><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path></svg>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-3 gap-0 divide-x divide-white/[0.06] bg-white/[0.03] py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-white/[0.05]">
+              <div className="text-center px-0.5">
+                <div className="text-xs sm:text-sm font-black text-white leading-none">{getPlayerAge(player)}</div>
+                <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-[0.1em] text-white/30 mt-1">Yaş</div>
+              </div>
+              <div className="text-center px-0.5">
+                <div className="text-[8px] sm:text-[10px] font-black leading-tight" style={{ color: cfg.color }}>{FOOT_MAP[player.dominantFoot] ?? player.dominantFoot}</div>
+                <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-[0.1em] text-white/30 mt-1">Ayak</div>
+              </div>
+              <div className="text-center px-0.5">
+                <div className="text-[8px] sm:text-[10px] font-black text-white/70 leading-tight uppercase">
+                  {player.height ? `${player.height} CM` : '-'}
+                </div>
+                <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-[0.1em] text-white/30 mt-1">Boy</div>
+              </div>
+            </div>
+
+            <div className="space-y-3 px-1">
+              <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.2em] text-white/25">
+                <div className="flex items-center gap-1 sm:gap-2 whitespace-nowrap">
+                  <span>Sezon Verileri</span>
+                  {player.season && (
+                    <span className="text-[#C1FF00]/40 text-[7px] sm:text-[8px] tracking-normal">
+                      ({player.season.replace(/20/g, '')})
                     </span>
                   )}
-                  {player.team && player.city && <span className="text-white/20 flex-shrink-0">·</span>}
-                  <span 
-                    className="text-white/35 font-medium whitespace-nowrap"
-                  >
-                    {player.city}
-                  </span>
                 </div>
-                {player.league && (
-                  <div className="flex items-center gap-1.5 mt-0.5 w-full overflow-hidden">
-                    <span className="text-[7.5px] sm:text-[10px] font-black text-[#C1FF00]/60 uppercase tracking-widest whitespace-nowrap flex-shrink-0">
-                      {(() => {
-                        let leagueText = player.league
-                          .replace(/Süper Amatör.*/i, 'SAL')
-                          .replace(/Bölgesel Amatör.*/i, 'BAL')
-                          .replace(/1\. Amatör.*/i, '1. AMATÖR')
-                          .replace(/2\. Amatör.*/i, '2. AMATÖR')
-                          .replace(/Gelişim Altyapısı/i, 'GELİŞİM')
-                          .replace(/Elit Altyapı/i, 'ELİT ALTYAPI');
-                        
-                        const isAltyapi = leagueText === 'GELİŞİM' || leagueText === 'ELİT ALTYAPI';
+                <div className="h-px flex-1 mx-3 bg-white/5" />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {/* Maç Sayısı - Herkes için */}
+                <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
+                  <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Maç</span>
+                  <span className="text-xs sm:text-sm font-black text-white/90">{player.matchesPlayed || 0}</span>
+                </div>
 
-                        if (player.uCategory) {
-                          if (isAltyapi) {
-                            return `${player.uCategory} ${leagueText}`;
-                          }
-                          return `${leagueText} · ${player.uCategory}`;
-                        }
-                        return leagueText;
-                      })()}
-                    </span>
-                    <span className="text-[#C1FF00] text-[6px] sm:text-[10px] flex-shrink-0 drop-shadow-[0_0_5px_rgba(193,255,0,0.8)] opacity-60">·</span>
-                    {(() => {
-                      let posText = player.position;
-                      if (/numara/i.test(posText)) {
-                        posText = posText.replace(/numara/gi, '').replace(/\s+/g, ' ').replace(/\s*-\s*$/g, '').trim() + ' NUMARA';
-                      }
-
-                      // Mobilde çok uzun mevkileri kısaltalım
-                      const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-                      if (isMobile) {
-                        posText = posText
-                          .replace(/Kaleci/g, 'KL')
-                          .replace(/Defans/g, 'DEF')
-                          .replace(/Orta Saha/g, 'OS')
-                          .replace(/Forvet/g, 'FV')
-                          .replace(/Kanat/g, 'KNT')
-                          .replace(/Stoper/g, 'STP')
-                          .replace(/Sol Bek/g, 'SLB')
-                          .replace(/Sağ Bek/g, 'SGB')
-                          .replace(/Sol Açık/g, 'SLA')
-                          .replace(/Sağ Açık/g, 'SGA');
-                      }
-
-                      const isVeryLong = posText.length > 18;
-                      const isLong = posText.length > 13;
-                      
-                      return (
-                        <span 
-                          className={`font-black uppercase whitespace-nowrap sm:text-[10px] sm:tracking-widest ${isVeryLong ? 'text-[5.5px] tracking-tight' : isLong ? 'text-[6.5px] tracking-tight' : 'text-[7.5px] tracking-wider'}`} 
-                          style={{ color: cfg.color }}
-                        >
-                          {posText}
-                        </span>
-                      );
-                    })()}
-                  </div>
+                {player.position?.includes('Kaleci') ? (
+                  /* Kaleci İçin: Yenilen Gol ve Clean Sheets */
+                  <>
+                    <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
+                      <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Yenilen</span>
+                      <span className="text-xs sm:text-sm font-black text-red-400">{player.concededGoals || 0}</span>
+                    </div>
+                    <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
+                      <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Kapama</span>
+                      <span className="text-xs sm:text-sm font-black text-green-400">{player.cleanSheets || 0}</span>
+                    </div>
+                  </>
+                ) : (
+                  /* Diğerleri İçin: Gol ve Asist */
+                  <>
+                    <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
+                      <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Gol</span>
+                      <span className="text-xs sm:text-sm font-black text-[#C1FF00]">{player.goals || 0}</span>
+                    </div>
+                    <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
+                      <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Asist</span>
+                      <span className="text-xs sm:text-sm font-black text-cyan-400">{player.assists || 0}</span>
+                    </div>
+                  </>
                 )}
               </div>
-            </div>
-          </div>
-
-          {/* TRANSFER BANNER (EN İYİ REKLAM) */}
-          {player.oldTeam && player.newTeam && (
-            <div className="relative mt-4 group cursor-pointer" onClick={() => onShowTransfer(player)}>
-              {/* Floating Label (TextField style) */}
-              <div className="absolute -top-2 left-1 z-20 bg-[#C1FF00] text-[#0A2E2A] text-[5.5px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(193,255,0,0.4)]">
-                TRANSFER
-              </div>
-              
-              <div 
-                className="relative -mx-3 sm:-mx-5 px-3 sm:px-5 py-3 sm:py-4 bg-gradient-to-r from-[#C1FF00]/20 via-[#C1FF00]/5 to-transparent border-y border-[#C1FF00]/30 flex items-center justify-between gap-1 sm:gap-3 overflow-hidden transition-all duration-300 group-hover:bg-white/[0.04]"
-              >
-                 {/* Parlama Efekti */}
-                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C1FF00]/20 to-transparent transform -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out pointer-events-none" />
-                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C1FF00] shadow-[1px_0_15px_rgba(193,255,0,0.8)]" />
-                 
-                 <div className="flex flex-1 items-center gap-1 sm:gap-3 overflow-hidden min-w-0 pr-1 sm:pr-2">
-                   <div className="flex flex-1 items-center gap-0.5 sm:gap-2 overflow-hidden min-w-0">
-                     <span className="text-[7.5px] sm:text-[12px] font-bold text-white/50 uppercase tracking-wider sm:tracking-widest truncate">{player.oldTeam}</span>
-                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#C1FF00" strokeWidth="3" className="flex-shrink-0 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite] sm:w-[14px] sm:h-[14px]"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-                     <span className="text-[8.5px] sm:text-[14px] font-black text-[#C1FF00] uppercase tracking-wider sm:tracking-widest truncate drop-shadow-[0_0_8px_rgba(193,255,0,0.4)]">{player.newTeam}</span>
-                   </div>
-                 </div>
-
-                 <div className="flex-shrink-0 text-[#C1FF00]/40 group-hover:text-[#C1FF00] group-hover:scale-110 transition-all">
-                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="sm:w-[16px] sm:h-[16px]"><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path></svg>
-                 </div>
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-3 gap-0 divide-x divide-white/[0.06] bg-white/[0.03] py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-white/[0.05]">
-            <div className="text-center px-0.5">
-              <div className="text-xs sm:text-sm font-black text-white leading-none">{getPlayerAge(player)}</div>
-              <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-[0.1em] text-white/30 mt-1">Yaş</div>
-            </div>
-            <div className="text-center px-0.5">
-              <div className="text-[8px] sm:text-[10px] font-black leading-tight" style={{ color: cfg.color }}>{FOOT_MAP[player.dominantFoot] ?? player.dominantFoot}</div>
-              <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-[0.1em] text-white/30 mt-1">Ayak</div>
-            </div>
-            <div className="text-center px-0.5">
-              <div className="text-[8px] sm:text-[10px] font-black text-white/70 leading-tight uppercase">
-                {player.height ? `${player.height} CM` : '-'}
-              </div>
-              <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-[0.1em] text-white/30 mt-1">Boy</div>
-            </div>
-          </div>
-
-          <div className="space-y-3 px-1">
-            <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.2em] text-white/25">
-              <div className="flex items-center gap-1 sm:gap-2 whitespace-nowrap">
-                <span>Sezon Verileri</span>
-                {player.season && (
-                  <span className="text-[#C1FF00]/40 text-[7px] sm:text-[8px] tracking-normal">
-                    ({player.season.replace(/20/g, '')})
-                  </span>
-                )}
-              </div>
-              <div className="h-px flex-1 mx-3 bg-white/5" />
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {/* Maç Sayısı - Herkes için */}
-              <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
-                <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Maç</span>
-                <span className="text-xs sm:text-sm font-black text-white/90">{player.matchesPlayed || 0}</span>
-              </div>
-
-              {player.position?.includes('Kaleci') ? (
-                /* Kaleci İçin: Yenilen Gol ve Clean Sheets */
-                <>
-                  <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
-                    <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Yenilen</span>
-                    <span className="text-xs sm:text-sm font-black text-red-400">{player.concededGoals || 0}</span>
-                  </div>
-                  <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
-                    <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Kapama</span>
-                    <span className="text-xs sm:text-sm font-black text-green-400">{player.cleanSheets || 0}</span>
-                  </div>
-                </>
-              ) : (
-                /* Diğerleri İçin: Gol ve Asist */
-                <>
-                  <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
-                    <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Gol</span>
-                    <span className="text-xs sm:text-sm font-black text-[#C1FF00]">{player.goals || 0}</span>
-                  </div>
-                  <div className="bg-white/[0.02] sm:bg-white/[0.03] border border-white/[0.05] rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-center text-center">
-                    <span className="text-[7px] sm:text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Asist</span>
-                    <span className="text-xs sm:text-sm font-black text-cyan-400">{player.assists || 0}</span>
-                  </div>
-                </>
-              )}
-            </div>
             </div>
           </div>
 
@@ -340,14 +340,14 @@ function PlayerCardComponent({ player, index, onShowBio, onShowTransfer }: { pla
 
             {/* Butonlar */}
             <div className="grid grid-cols-2 gap-2">
-              <button 
+              <button
                 onClick={() => onShowBio(player)}
                 className={`w-full rounded-lg py-1.5 sm:py-2 text-[7.5px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all bg-white/5 border border-white/10 hover:border-white/20 text-white`}
               >
                 Özgeçmiş
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => {
                   const videoUrl = player.instagramVideoLink || player.driveVideoLink;
                   if (videoUrl) window.open(videoUrl, '_blank');
@@ -549,7 +549,7 @@ export default function VitrinPage() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ position: 'all', dominantFoot: 'all', league: 'all', minHeight: '', maxHeight: '' });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  
+
   // Özgeçmiş Modalı State'leri
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
   const [selectedBioPlayer, setSelectedBioPlayer] = useState<Player | null>(null);
@@ -572,14 +572,14 @@ export default function VitrinPage() {
     const q = query(collection(db, 'submissions'), where('status', '==', 'approved'));
     const unsub = onSnapshot(q, snap => {
       const list: Player[] = snap.docs.map(d => ({ id: d.id, ...d.data() } as Player));
-      
+
       // Sıralama Mantığı:
       // 1. Önce reytinge göre (Yüksekten düşüğe)
       // 2. Reytingler eşitse tarihe göre (En yeni önce)
       list.sort((a, b) => {
         const ratingA = a.rating || 0;
         const ratingB = b.rating || 0;
-        
+
         if (ratingB !== ratingA) {
           return ratingB - ratingA;
         }
@@ -622,13 +622,13 @@ export default function VitrinPage() {
       else if (filters.position === 'Kanat') matchPos = pos.includes('açık') || pos.includes('kanat');
       else matchPos = p.position === filters.position;
     }
-    
+
     const matchFoot = filters.dominantFoot === 'all' || p.dominantFoot === filters.dominantFoot;
     const matchLeague = (() => {
       if (filters.league === 'all') return true;
       const pl = (p.league || '').toLowerCase();
       const fl = filters.league.toLowerCase();
-      
+
       if (fl.includes('gelişim')) return pl.includes('gelişim');
       if (fl.includes('elit')) return pl.includes('elit');
       if (fl.includes('2. amatör')) return pl.includes('2. amatör') || pl.includes('2.amatör');
@@ -638,7 +638,7 @@ export default function VitrinPage() {
       if (fl.includes('3. lig')) return pl.includes('3. lig') || pl.includes('3.lig');
       if (fl.includes('2. lig')) return pl.includes('2. lig') || pl.includes('2.lig');
       if (fl.includes('1. lig')) return pl.includes('1. lig') || pl.includes('1.lig');
-      
+
       return pl.includes(fl) || pl === fl;
     })();
     const ph = p.height ?? 0;
@@ -773,21 +773,20 @@ export default function VitrinPage() {
                                   }} className="w-full md:w-16 bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-[#C1FF00]/50 text-center [&::-webkit-inner-spin-button]:appearance-none" />
                                 </div>
                               </div>
-                              
+
                               <div className="w-full md:w-auto md:border-l border-white/10 pt-5 md:pt-0 border-t md:border-t-0 mt-2 md:mt-0 md:pl-9 relative z-50 mb-4 md:mb-0">
-                                  <button
-                                    onClick={() => setFilters({ position: 'all', dominantFoot: 'all', league: 'all', minHeight: '', maxHeight: '' })}
-                                    disabled={!hasActiveFilters}
-                                    className={`w-full md:w-auto h-12 md:h-[72px] rounded-xl md:rounded-2xl flex items-center justify-center gap-2 md:gap-3 px-6 transition-all border group ${
-                                      hasActiveFilters 
-                                        ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20 border-red-500/20 cursor-pointer shadow-[0_0_15px_rgba(239,68,68,0.1)]' 
-                                        : 'bg-white/5 text-white/30 border-white/5 cursor-not-allowed opacity-50 hover:bg-white/10'
+                                <button
+                                  onClick={() => setFilters({ position: 'all', dominantFoot: 'all', league: 'all', minHeight: '', maxHeight: '' })}
+                                  disabled={!hasActiveFilters}
+                                  className={`w-full md:w-auto h-12 md:h-[72px] rounded-xl md:rounded-2xl flex items-center justify-center gap-2 md:gap-3 px-6 transition-all border group ${hasActiveFilters
+                                    ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20 border-red-500/20 cursor-pointer shadow-[0_0_15px_rgba(239,68,68,0.1)]'
+                                    : 'bg-white/5 text-white/30 border-white/5 cursor-not-allowed opacity-50 hover:bg-white/10'
                                     }`}
-                                    title="Filtreleri Temizle"
-                                  >
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`md:w-[22px] md:h-[22px] ${hasActiveFilters ? "group-hover:rotate-180 transition-transform duration-500" : ""}`}><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                                    <span className="text-[10px] md:text-[10px] font-black uppercase tracking-[0.2em] mt-0.5">Temizle</span>
-                                  </button>
+                                  title="Filtreleri Temizle"
+                                >
+                                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`md:w-[22px] md:h-[22px] ${hasActiveFilters ? "group-hover:rotate-180 transition-transform duration-500" : ""}`}><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                  <span className="text-[10px] md:text-[10px] font-black uppercase tracking-[0.2em] mt-0.5">Temizle</span>
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -822,10 +821,10 @@ export default function VitrinPage() {
                 ) : (
                   <>
                     {filtered.map((player, i) => (
-                      <PlayerCard 
-                        key={player.id} 
-                        player={player} 
-                        index={i} 
+                      <PlayerCard
+                        key={player.id}
+                        player={player}
+                        index={i}
                         onShowBio={handleShowBio}
                         onShowTransfer={handleShowTransfer}
                       />
@@ -842,21 +841,21 @@ export default function VitrinPage() {
       <AnimatePresence>
         {isBioModalOpen && selectedBioPlayer && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setIsBioModalOpen(false)}
-              className="absolute inset-0 bg-black/90 backdrop-blur-md" 
+              className="absolute inset-0 bg-black/90 backdrop-blur-md"
             />
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 30 }}
               className="relative w-full max-w-lg bg-[#0a1a18] border border-[#C1FF00]/10 rounded-3xl overflow-hidden shadow-2xl"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#C1FF00]/5 blur-3xl -mr-16 -mt-16" />
-              
+
               <div className="p-6 sm:p-8 relative">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -880,14 +879,14 @@ export default function VitrinPage() {
                     </div>
                   </div>
                 )}
-                
+
                 <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-5 sm:p-6 mb-8 max-h-[60vh] overflow-y-auto no-scrollbar shadow-inner">
                   <p className="text-white/70 text-sm sm:text-base leading-relaxed whitespace-pre-wrap font-medium">
                     {selectedBioPlayer.bio || 'Bu oyuncu hakkında henüz ek bilgi eklenmemiş.'}
                   </p>
                 </div>
 
-                <button 
+                <button
                   onClick={() => setIsBioModalOpen(false)}
                   className="w-full bg-[#C1FF00] text-black py-4 rounded-xl font-black text-xs sm:text-sm uppercase tracking-widest hover:bg-[#d4ff33] transition-all shadow-lg active:scale-95 duration-200"
                 >
@@ -903,15 +902,15 @@ export default function VitrinPage() {
       <AnimatePresence>
         {isTransferModalOpen && selectedTransfer && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setIsTransferModalOpen(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-all duration-300" 
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-all duration-300"
             />
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 30 }}
@@ -920,7 +919,7 @@ export default function VitrinPage() {
             >
               <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#C1FF00]/10 blur-[80px] rounded-full -mr-32 -mt-32 pointer-events-none" />
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C1FF00] to-transparent opacity-80" />
-              
+
               <div className="pt-8 px-6 sm:px-8 pb-6 sm:pb-8 relative">
                 <div className="flex items-start justify-between mb-8 sm:mb-10">
                   <div className="flex flex-col">
@@ -929,7 +928,7 @@ export default function VitrinPage() {
                   </div>
                   <button onClick={() => setIsTransferModalOpen(false)} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all flex-shrink-0 mt-0.5">✕</button>
                 </div>
-                
+
                 <h4 className="text-2xl sm:text-4xl font-black text-white uppercase tracking-tighter text-center mb-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.15)] leading-none italic">
                   {selectedTransfer.fullName}
                 </h4>
@@ -946,11 +945,11 @@ export default function VitrinPage() {
                   </div>
 
                   <div className="flex flex-col items-center justify-center w-full relative z-10 my-4 sm:my-5">
-                     <div className="h-4 w-px bg-gradient-to-b from-white/10 to-[#C1FF00]/50" />
-                     <div className="w-10 h-10 rounded-full bg-[#C1FF00]/10 border border-[#C1FF00]/30 flex items-center justify-center shadow-[0_0_20px_rgba(193,255,0,0.2)] animate-pulse backdrop-blur-md">
-                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C1FF00" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
-                     </div>
-                     <div className="h-4 w-px bg-gradient-to-b from-[#C1FF00]/50 to-[#C1FF00]/10" />
+                    <div className="h-4 w-px bg-gradient-to-b from-white/10 to-[#C1FF00]/50" />
+                    <div className="w-10 h-10 rounded-full bg-[#C1FF00]/10 border border-[#C1FF00]/30 flex items-center justify-center shadow-[0_0_20px_rgba(193,255,0,0.2)] animate-pulse backdrop-blur-md">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C1FF00" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
+                    </div>
+                    <div className="h-4 w-px bg-gradient-to-b from-[#C1FF00]/50 to-[#C1FF00]/10" />
                   </div>
 
                   <div className="flex flex-col items-center text-center relative z-10 w-full mt-1">
